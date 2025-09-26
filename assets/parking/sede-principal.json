@@ -1,0 +1,553 @@
+{
+  "id": "sede_principal_p1",
+  "nombre": "Parqueadero Principal - Sede Central",
+  "descripcion": "Parqueadero principal de la sede central",
+  "configuracion": {
+    "dimensiones": {
+      "width": 600,
+      "height": 300
+    },
+    "colores": {
+      "fondo": "#f8f9fa",
+      "limite": "#000000",
+      "zona": "#FFC107"
+    }
+  },
+  "limites": [
+    {
+      "id": "borde_superior",
+      "tipo": "linea",
+      "coordenadas": { "x1": 20, "y1": 20, "x2": 580, "y2": 20 },
+      "estilo": {
+        "stroke": "#000000",
+        "strokeWidth": 4,
+        "strokeDasharray": "10,5"
+      }
+    },
+    {
+      "id": "borde_inferior",
+      "tipo": "linea",
+      "coordenadas": { "x1": 20, "y1": 295, "x2": 580, "y2": 280 },
+      "estilo": {
+        "stroke": "#000000",
+        "strokeWidth": 4,
+        "strokeDasharray": "10,5"
+      }
+    },
+    {
+      "id": "borde_izquierdo",
+      "tipo": "linea",
+      "coordenadas": { "x1": 20, "y1": 20, "x2": 20, "y2": 295 },
+      "estilo": {
+        "stroke": "#000000",
+        "strokeWidth": 4,
+        "strokeDasharray": "10,5"
+      }
+    },
+    {
+      "id": "borde_derecho",
+      "tipo": "linea",
+      "coordenadas": { "x1": 580, "y1": 20, "x2": 580, "y2": 280 },
+      "estilo": {
+        "stroke": "#000000",
+        "strokeWidth": 4,
+        "strokeDasharray": "10,5"
+      }
+    },
+    {
+      "id": "separador_h1",
+      "tipo": "linea",
+      "coordenadas": { "x1": 20, "y1": 130, "x2": 250, "y2": 130 },
+      "estilo": {
+        "stroke": "#000000",
+        "strokeWidth": 4,
+        "strokeDasharray": "10,5"
+      }
+    },
+    {
+      "id": "separador_h2",
+      "tipo": "linea",
+      "coordenadas": { "x1": 20, "y1": 170, "x2": 250, "y2": 170 },
+      "estilo": {
+        "stroke": "#000000",
+        "strokeWidth": 4,
+        "strokeDasharray": "10,5"
+      }
+    },
+    {
+      "id": "camino_central_1",
+      "tipo": "linea",
+      "coordenadas": { "x1": 250, "y1": 20, "x2": 250, "y2": 130 },
+      "estilo": {
+        "stroke": "#000000",
+        "strokeWidth": 4,
+        "strokeDasharray": "10,5"
+      }
+    },
+    {
+      "id": "camino_central_2",
+      "tipo": "linea",
+      "coordenadas": { "x1": 250, "y1": 170, "x2": 250, "y2": 280 },
+      "estilo": {
+        "stroke": "#000000",
+        "strokeWidth": 4,
+        "strokeDasharray": "10,5"
+      }
+    },
+    {
+      "id": "diagonal_1",
+      "tipo": "linea",
+      "coordenadas": { "x1": 250, "y1": 130, "x2": 300, "y2": 150 },
+      "estilo": {
+        "stroke": "#000000",
+        "strokeWidth": 4,
+        "strokeDasharray": "10,5"
+      }
+    },
+    {
+      "id": "diagonal_2",
+      "tipo": "linea",
+      "coordenadas": { "x1": 300, "y1": 150, "x2": 350, "y2": 170 },
+      "estilo": {
+        "stroke": "#000000",
+        "strokeWidth": 4,
+        "strokeDasharray": "10,5"
+      }
+    },
+    {
+      "id": "diagonal_3",
+      "tipo": "linea",
+      "coordenadas": { "x1": 350, "y1": 130, "x2": 300, "y2": 150 },
+      "estilo": {
+        "stroke": "#000000",
+        "strokeWidth": 4,
+        "strokeDasharray": "10,5"
+      }
+    },
+    {
+      "id": "diagonal_4",
+      "tipo": "linea",
+      "coordenadas": { "x1": 300, "y1": 150, "x2": 250, "y2": 170 },
+      "estilo": {
+        "stroke": "#000000",
+        "strokeWidth": 4,
+        "strokeDasharray": "10,5"
+      }
+    },
+    {
+      "id": "separador_der_1",
+      "tipo": "linea",
+      "coordenadas": { "x1": 350, "y1": 20, "x2": 350, "y2": 130 },
+      "estilo": {
+        "stroke": "#000000",
+        "strokeWidth": 4,
+        "strokeDasharray": "10,5"
+      }
+    },
+    {
+      "id": "separador_der_2",
+      "tipo": "linea",
+      "coordenadas": { "x1": 350, "y1": 170, "x2": 350, "y2": 280 },
+      "estilo": {
+        "stroke": "#000000",
+        "strokeWidth": 4,
+        "strokeDasharray": "10,5"
+      }
+    }
+  ],
+  "zonas": [
+    {
+      "id": "zona_a",
+      "nombre": "Zona A",
+      "descripcion": "Primera zona de parqueo",
+      "posicion": { "x": 30, "y": 30 },
+      "dimensiones": { "width": 210, "height": 95 },
+      "estilo": {
+        "fill": "rgba(255, 193, 7, 0.1)",
+        "stroke": "#FFC107",
+        "strokeWidth": 3
+      },
+      "espacios": [
+        {
+          "id": "A01",
+          "posicion": { "x": 0, "y": 0 },
+          "dimensiones": { "width": 45, "height": 35 },
+
+          "estado": "disponible",
+          "tipo": "regular",
+          "estilo": {
+            "stroke": "#ffffff",
+            "strokeWidth": 2,
+            "rx": 3
+          }
+        },
+        {
+          "id": "A02",
+          "posicion": { "x": 50, "y": 0 },
+          "dimensiones": { "width": 45, "height": 35 },
+          "estado": "ocupado",
+          "tipo": "regular",
+          "estilo": {
+            "stroke": "#ffffff",
+            "strokeWidth": 2,
+            "rx": 3
+          }
+        },
+        {
+          "id": "A03",
+          "posicion": { "x": 100, "y": 0 },
+          "dimensiones": { "width": 45, "height": 35 },
+          "estado": "disponible",
+          "tipo": "regular",
+          "estilo": {
+            "stroke": "#ffffff",
+            "strokeWidth": 2,
+            "rx": 3
+          }
+        },
+        {
+          "id": "A04",
+          "posicion": { "x": 150, "y": 0 },
+          "dimensiones": { "width": 45, "height": 35 },
+          "estado": "reservado",
+          "tipo": "discapacitados",
+          "estilo": {
+            "stroke": "#ffffff",
+            "strokeWidth": 2,
+            "rx": 3
+          }
+        },
+        {
+          "id": "A05",
+          "posicion": { "x": 0, "y": 50 },
+          "dimensiones": { "width": 45, "height": 35 },
+          "estado": "disponible",
+          "tipo": "regular",
+          "estilo": {
+            "stroke": "#ffffff",
+            "strokeWidth": 2,
+            "rx": 3
+          }
+        },
+        {
+          "id": "A06",
+          "posicion": { "x": 50, "y": 50 },
+          "dimensiones": { "width": 45, "height": 35 },
+          "estado": "disponible",
+          "tipo": "regular",
+          "estilo": {
+            "stroke": "#ffffff",
+            "strokeWidth": 2,
+            "rx": 3
+          }
+        },
+        {
+          "id": "A07",
+          "posicion": { "x": 100, "y": 50 },
+          "dimensiones": { "width": 45, "height": 35 },
+          "estado": "ocupado",
+          "tipo": "regular",
+          "estilo": {
+            "stroke": "#ffffff",
+            "strokeWidth": 2,
+            "rx": 3
+          }
+        },
+        {
+          "id": "A08",
+          "posicion": { "x": 150, "y": 50 },
+          "dimensiones": { "width": 45, "height": 35 },
+          "estado": "disponible",
+          "tipo": "regular",
+          "estilo": {
+            "stroke": "#ffffff",
+            "strokeWidth": 2,
+            "rx": 3
+          }
+        }
+      ]
+    },
+    {
+      "id": "zona_b",
+      "nombre": "Zona B",
+      "descripcion": "Segunda zona de parqueo",
+      "posicion": { "x": 30, "y": 180 },
+      "dimensiones": { "width": 210, "height": 110 },
+      "estilo": {
+        "fill": "rgba(255, 193, 7, 0.1)",
+        "stroke": "#FFC107",
+        "strokeWidth": 3
+      },
+      "espacios": [
+        {
+          "id": "B01",
+          "posicion": { "x": 0, "y": 0 },
+          "poligono": [0, 0, 45, 0, 45, 35, 0, 35],
+          "estado": "disponible",
+          "tipo": "regular",
+          "estilo": {
+            "stroke": "#ffffff",
+            "strokeWidth": 2,
+            "rx": 3
+          }
+        },
+        {
+          "id": "B02",
+          "posicion": { "x": 50, "y": 0 },
+          "dimensiones": { "width": 45, "height": 35 },
+          "estado": "disponible",
+          "tipo": "regular",
+          "estilo": {
+            "stroke": "#ffffff",
+            "strokeWidth": 2,
+            "rx": 3
+          }
+        },
+        {
+          "id": "B03",
+          "posicion": { "x": 100, "y": 0 },
+          "dimensiones": { "width": 45, "height": 35 },
+          "estado": "ocupado",
+          "tipo": "regular",
+          "estilo": {
+            "stroke": "#ffffff",
+            "strokeWidth": 2,
+            "rx": 3
+          }
+        },
+        {
+          "id": "B04",
+          "posicion": { "x": 150, "y": 0 },
+          "dimensiones": { "width": 45, "height": 35 },
+          "estado": "disponible",
+          "tipo": "regular",
+          "estilo": {
+            "stroke": "#ffffff",
+            "strokeWidth": 2,
+            "rx": 3
+          }
+        },
+        {
+          "id": "B05",
+          "posicion": { "x": 0, "y": 50 },
+          "dimensiones": { "width": 45, "height": 35 },
+          "estado": "reservado",
+          "tipo": "regular",
+          "estilo": {
+            "stroke": "#ffffff",
+            "strokeWidth": 2,
+            "rx": 3
+          }
+        },
+        {
+          "id": "B06",
+          "posicion": { "x": 50, "y": 50 },
+          "dimensiones": { "width": 45, "height": 35 },
+          "estado": "disponible",
+          "tipo": "regular",
+          "estilo": {
+            "stroke": "#ffffff",
+            "strokeWidth": 2,
+            "rx": 3
+          }
+        },
+        {
+          "id": "B07",
+          "posicion": { "x": 100, "y": 50 },
+          "dimensiones": { "width": 45, "height": 35 },
+          "estado": "disponible",
+          "tipo": "regular",
+          "estilo": {
+            "stroke": "#ffffff",
+            "strokeWidth": 2,
+            "rx": 3
+          }
+        },
+        {
+          "id": "B08",
+          "posicion": { "x": 150, "y": 50 },
+          "dimensiones": { "width": 45, "height": 35 },
+          "estado": "disponible",
+          "tipo": "regular",
+          "estilo": {
+            "stroke": "#ffffff",
+            "strokeWidth": 2,
+            "rx": 3
+          }
+        }
+      ]
+    },
+    {
+      "id": "zona_c",
+      "nombre": "Zona C",
+      "descripcion": "Tercera zona de parqueo",
+      "posicion": { "x": 380, "y": 40 },
+      "dimensiones": { "width": 210, "height": 50 },
+      "estilo": {
+        "fill": "rgba(255, 193, 7, 0.1)",
+        "stroke": "#FFC107",
+        "strokeWidth": 3
+      },
+      "espacios": [
+        {
+          "id": "C01",
+          "posicion": { "x": 0, "y": 0 },
+          "dimensiones": { "width": 45, "height": 35 },
+          "estado": "disponible",
+          "tipo": "regular",
+          "estilo": {
+            "stroke": "#ffffff",
+            "strokeWidth": 2,
+            "rx": 3
+          }
+        },
+        {
+          "id": "C02",
+          "posicion": { "x": 50, "y": 0 },
+          "dimensiones": { "width": 45, "height": 35 },
+          "estado": "disponible",
+          "tipo": "regular",
+          "estilo": {
+            "stroke": "#ffffff",
+            "strokeWidth": 2,
+            "rx": 3
+          }
+        },
+        {
+          "id": "C03",
+          "posicion": { "x": 100, "y": 0 },
+          "dimensiones": { "width": 45, "height": 35 },
+          "estado": "ocupado",
+          "tipo": "regular",
+          "estilo": {
+            "stroke": "#ffffff",
+            "strokeWidth": 2,
+            "rx": 3
+          }
+        },
+        {
+          "id": "C04",
+          "posicion": { "x": 150, "y": 0 },
+          "dimensiones": { "width": 45, "height": 35 },
+          "estado": "disponible",
+          "tipo": "regular",
+          "estilo": {
+            "stroke": "#ffffff",
+            "strokeWidth": 2,
+            "rx": 3
+          }
+        }
+      ]
+    },
+    {
+      "id": "zona_d",
+      "nombre": "Zona D",
+      "descripcion": "Cuarta zona de parqueo",
+      "posicion": { "x": 380, "y": 130 },
+      "dimensiones": { "width": 210, "height": 110 },
+      "estilo": {
+        "fill": "rgba(255, 193, 7, 0.1)",
+        "stroke": "#FFC107",
+        "strokeWidth": 3
+      },
+      "espacios": [
+        {
+          "id": "D01",
+          "posicion": { "x": 0, "y": 0 },
+          "dimensiones": { "width": 45, "height": 35 },
+          "estado": "disponible",
+          "tipo": "regular",
+          "estilo": {
+            "stroke": "#ffffff",
+            "strokeWidth": 2,
+            "rx": 3
+          }
+        },
+        {
+          "id": "D02",
+          "posicion": { "x": 50, "y": 0 },
+          "dimensiones": { "width": 45, "height": 35 },
+          "estado": "reservado",
+          "tipo": "regular",
+          "estilo": {
+            "stroke": "#ffffff",
+            "strokeWidth": 2,
+            "rx": 3
+          }
+        },
+        {
+          "id": "D03",
+          "posicion": { "x": 100, "y": 0 },
+          "dimensiones": { "width": 45, "height": 35 },
+          "estado": "disponible",
+          "tipo": "regular",
+          "estilo": {
+            "stroke": "#ffffff",
+            "strokeWidth": 2,
+            "rx": 3
+          }
+        },
+        {
+          "id": "D04",
+          "posicion": { "x": 150, "y": 0 },
+          "dimensiones": { "width": 45, "height": 35 },
+          "estado": "ocupado",
+          "tipo": "regular",
+          "estilo": {
+            "stroke": "#ffffff",
+            "strokeWidth": 2,
+            "rx": 3
+          }
+        },
+        {
+          "id": "D05",
+          "posicion": { "x": 0, "y": 50 },
+          "dimensiones": { "width": 45, "height": 35 },
+          "estado": "disponible",
+          "tipo": "regular",
+          "estilo": {
+            "stroke": "#ffffff",
+            "strokeWidth": 2,
+            "rx": 3
+          }
+        },
+        {
+          "id": "D06",
+          "posicion": { "x": 50, "y": 50 },
+          "dimensiones": { "width": 45, "height": 35 },
+          "estado": "disponible",
+          "tipo": "regular",
+          "estilo": {
+            "stroke": "#ffffff",
+            "strokeWidth": 2,
+            "rx": 3
+          }
+        },
+        {
+          "id": "D07",
+          "posicion": { "x": 100, "y": 50 },
+          "dimensiones": { "width": 45, "height": 35 },
+          "estado": "disponible",
+          "tipo": "regular",
+          "estilo": {
+            "stroke": "#ffffff",
+            "strokeWidth": 2,
+            "rx": 3
+          }
+        },
+        {
+          "id": "D08",
+          "posicion": { "x": 150, "y": 50 },
+          "dimensiones": { "width": 45, "height": 35 },
+          "estado": "disponible",
+          "tipo": "regular",
+          "estilo": {
+            "stroke": "#ffffff",
+            "strokeWidth": 2,
+            "rx": 3
+          }
+        }
+      ]
+    }
+  ]
+}

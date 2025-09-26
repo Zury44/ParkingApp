@@ -1,0 +1,89 @@
+{
+  "welcome": {
+    "title": "Welcome to {{appName}}!",
+    "subtitle": "To access all functionalities, please register or sign in with your account.",
+    "signIn": "Sign In",
+    "register": "Register",
+    "language": "English",
+    "selectLanguage": "Select language"
+  },
+  "auth": {
+    "email": "Email",
+    "password": "Password",
+    "confirmPassword": "Confirm Password",
+    "fullName": "Full Name",
+    "login": "Login",
+    "register": "Register",
+    "loginTitle": "Sign In",
+    "registerTitle": "Create Account",
+    "loginSubtitle": "Welcome back! Please enter your details.",
+    "registerSubtitle": "Create your account to get started.",
+    "forgotPassword": "Forgot your password?",
+    "dontHaveAccount": "Don't have an account?",
+    "alreadyHaveAccount": "Already have an account?",
+    "signUp": "Sign up here",
+    "signIn": "Sign in",
+    "orContinueWith": "or",
+    "agreeToTerms": "I agree to the Terms of Service and Privacy Policy",
+    "createAccount": "Create Account",
+    "welcomeBack": "Welcome back",
+    "loggingIn": "Signing in...",
+    "registering": "Registering...",
+    "enterEmail": "Enter your email",
+    "enterPassword": "Enter your password",
+    "rememberMe": "Remember me",
+    "clearSavedEmail": "Use another email"
+  },
+  "validation": {
+    "emailRequired": "Please enter your email",
+    "emailInvalid": "Invalid email",
+    "passwordRequired": "Please enter your password",
+    "passwordMinLength": "Password must be at least 8 characters",
+    "confirmPasswordRequired": "Please confirm your password",
+    "passwordsDontMatch": "Passwords don't match",
+    "fullNameRequired": "Full name is required",
+    "fullNameMinLength": "Full name must be at least 2 characters",
+    "termsRequired": "You must agree to the terms and conditions",
+    "passwordNeedsUppercase": "Password must include at least one uppercase letter",
+    "passwordNeedsNumber": "Password must include at least one number",
+    "passwordNeedsSpecial": "Password must include at least one special character",
+    "completeAllFields": "Please complete all fields"
+  },
+  "errors": {
+    "loginFailed": "Incorrect username or password",
+    "registerFailed": "Registration failed. Please try again",
+    "networkError": "Connection error. Check your internet connection",
+    "unknownError": "An unexpected error occurred",
+    "accountNotFound": "Account not found. Check your information",
+    "invalidData": "Invalid data. Review the information entered",
+    "connectionTimeout": "Connection timed out. Try again",
+    "serverError": "Could not connect to server",
+    "noAssociatedCompanies": "You have no associated companies"
+  },
+  "success": {
+    "registrationComplete": "Registration successful!",
+    "confirmationEmailSent": "We sent you a confirmation email. Verify your account before signing in",
+    "understood": "Understood"
+  },
+  "password": {
+    "strength": "Password strength:",
+    "secure": "Secure password!",
+    "missing": "Missing: {{items}}",
+    "requirements": {
+      "length": "8+ characters",
+      "uppercase": "uppercase",
+      "number": "number",
+      "special": "special character"
+    }
+  },
+  "common": {
+    "loading": "Loading...",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "continue": "Continue",
+    "back": "Back",
+    "next": "Next",
+    "done": "Done",
+    "save": "Save"
+  }
+}

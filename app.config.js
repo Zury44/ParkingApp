@@ -13,6 +13,7 @@ export default ({ config }) => ({
       supportsTablet: true,
     },
     android: {
+      package: "com.zury44.ParkingApp",
       adaptiveIcon: {
         backgroundColor: "#ffffff",
         foregroundImage: "./assets/images/android-icon.png",
@@ -42,21 +43,15 @@ export default ({ config }) => ({
       reactCompiler: true,
     },
     extra: {
-      API_URL: process.env.API_URL,
-      API_KEY: process.env.API_KEY,
-      API_URL_LOGIN: process.env.API_URL_LOGIN,
-      API_URL_SELECTION: process.env.API_URL_SELECTION,
-      API_URL_SWITCH_CONTEXT: process.env.API_URL_SWITCH_CONTEXT,
-      API_CAMARA_URL: process.env.API_CAMARA_URL,
-      MQTT_BROKER_URL: process.env.MQTT_BROKER_URL,
-      MQTT_CLIENT_ID: process.env.MQTT_CLIENT,
-      MQTT_USERNAME: process.env.MQTT_USERNAME,
-      MQTT_PASSWORD: process.env.MQTT_PASSWORD,
-      MQTT_TOPIC: process.env.MQTT_TOPIC,
-      MQTT_RECONNECT_PERIOD: process.env.MQTT_RECONNECT_PERIOD,
-      MQTT_CONNECT_TIMEOUT: process.env.MQTT_CONNECT_TIMEOUT,
-      MQTT_CLEAN: process.env.MQTT_CLEAN,
+      EXPO_PUBLIC_API_URL: process.env.EXPO_PUBLIC_API_URL,
+      EXPO_PUBLIC_API_URL_LOGIN: process.env.EXPO_PUBLIC_API_URL_LOGIN,
+      EXPO_PUBLIC_API_URL_SWITCH_CONTEXT:
+        process.env.EXPO_PUBLIC_API_URL_SWITCH_CONTEXT,
 
+      EXPO_PUBLIC_PARKING_CENTRAL: process.env.EXPO_PUBLIC_PARKING_CENTRAL,
+      EXPO_PUBLIC_PARKING_MEDICINA: process.env.EXPO_PUBLIC_PARKING_MEDICINA,
+      EXPO_PUBLIC_ESTADOS_CENTRAL: process.env.EXPO_PUBLIC_ESTADOS_CENTRAL,
+      EXPO_PUBLIC_ESTADOS_MEDICINA: process.env.EXPO_PUBLIC_ESTADOS_MEDICINA,
       eas: {
         projectId: "2c7551ba-10e3-4721-8098-49357731405e",
       },

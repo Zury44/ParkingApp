@@ -1,0 +1,875 @@
+{
+  "id": "sede_principal_p1",
+  "nombre": "Parqueadero Principal - Sede Central",
+  "descripcion": "Parqueadero principal de la sede central",
+  "configuracion": {
+    "dimensiones": {
+      "width": 600,
+      "height": 300
+    },
+    "colores": {
+      "fondo": "#f8f9fa",
+      "limite": "#000000",
+      "zona": "#FFC107"
+    }
+  },
+  "limites": [
+    {
+      "id": "borde_superior",
+      "tipo": "linea",
+      "coordenadas": {
+        "x1": 20,
+        "y1": 20,
+        "x2": 580,
+        "y2": 20
+      },
+      "estilo": {
+        "stroke": "#000000",
+        "strokeWidth": 4,
+        "strokeDasharray": "10,5"
+      }
+    },
+    {
+      "id": "borde_inferior",
+      "tipo": "linea",
+      "coordenadas": {
+        "x1": 20,
+        "y1": 295,
+        "x2": 580,
+        "y2": 280
+      },
+      "estilo": {
+        "stroke": "#000000",
+        "strokeWidth": 4,
+        "strokeDasharray": "10,5"
+      }
+    },
+    {
+      "id": "borde_izquierdo",
+      "tipo": "linea",
+      "coordenadas": {
+        "x1": 20,
+        "y1": 20,
+        "x2": 20,
+        "y2": 295
+      },
+      "estilo": {
+        "stroke": "#000000",
+        "strokeWidth": 4,
+        "strokeDasharray": "10,5"
+      }
+    },
+    {
+      "id": "borde_derecho",
+      "tipo": "linea",
+      "coordenadas": {
+        "x1": 580,
+        "y1": 20,
+        "x2": 580,
+        "y2": 280
+      },
+      "estilo": {
+        "stroke": "#000000",
+        "strokeWidth": 4,
+        "strokeDasharray": "10,5"
+      }
+    },
+    {
+      "id": "separador_h1",
+      "tipo": "linea",
+      "coordenadas": {
+        "x1": 20,
+        "y1": 130,
+        "x2": 250,
+        "y2": 130
+      },
+      "estilo": {
+        "stroke": "#000000",
+        "strokeWidth": 4,
+        "strokeDasharray": "10,5"
+      }
+    },
+    {
+      "id": "separador_h2",
+      "tipo": "linea",
+      "coordenadas": {
+        "x1": 20,
+        "y1": 170,
+        "x2": 250,
+        "y2": 170
+      },
+      "estilo": {
+        "stroke": "#000000",
+        "strokeWidth": 4,
+        "strokeDasharray": "10,5"
+      }
+    },
+    {
+      "id": "camino_central_1",
+      "tipo": "linea",
+      "coordenadas": {
+        "x1": 250,
+        "y1": 20,
+        "x2": 250,
+        "y2": 130
+      },
+      "estilo": {
+        "stroke": "#000000",
+        "strokeWidth": 4,
+        "strokeDasharray": "10,5"
+      }
+    },
+    {
+      "id": "camino_central_2",
+      "tipo": "linea",
+      "coordenadas": {
+        "x1": 250,
+        "y1": 170,
+        "x2": 250,
+        "y2": 280
+      },
+      "estilo": {
+        "stroke": "#000000",
+        "strokeWidth": 4,
+        "strokeDasharray": "10,5"
+      }
+    },
+    {
+      "id": "diagonal_1",
+      "tipo": "linea",
+      "coordenadas": {
+        "x1": 250,
+        "y1": 130,
+        "x2": 300,
+        "y2": 150
+      },
+      "estilo": {
+        "stroke": "#000000",
+        "strokeWidth": 4,
+        "strokeDasharray": "10,5"
+      }
+    },
+    {
+      "id": "diagonal_2",
+      "tipo": "linea",
+      "coordenadas": {
+        "x1": 300,
+        "y1": 150,
+        "x2": 350,
+        "y2": 170
+      },
+      "estilo": {
+        "stroke": "#000000",
+        "strokeWidth": 4,
+        "strokeDasharray": "10,5"
+      }
+    },
+    {
+      "id": "diagonal_3",
+      "tipo": "linea",
+      "coordenadas": {
+        "x1": 350,
+        "y1": 130,
+        "x2": 300,
+        "y2": 150
+      },
+      "estilo": {
+        "stroke": "#000000",
+        "strokeWidth": 4,
+        "strokeDasharray": "10,5"
+      }
+    },
+    {
+      "id": "diagonal_4",
+      "tipo": "linea",
+      "coordenadas": {
+        "x1": 300,
+        "y1": 150,
+        "x2": 250,
+        "y2": 170
+      },
+      "estilo": {
+        "stroke": "#000000",
+        "strokeWidth": 4,
+        "strokeDasharray": "10,5"
+      }
+    },
+    {
+      "id": "separador_der_1",
+      "tipo": "linea",
+      "coordenadas": {
+        "x1": 350,
+        "y1": 20,
+        "x2": 350,
+        "y2": 130
+      },
+      "estilo": {
+        "stroke": "#000000",
+        "strokeWidth": 4,
+        "strokeDasharray": "10,5"
+      }
+    },
+    {
+      "id": "separador_der_2",
+      "tipo": "linea",
+      "coordenadas": {
+        "x1": 350,
+        "y1": 170,
+        "x2": 350,
+        "y2": 280
+      },
+      "estilo": {
+        "stroke": "#000000",
+        "strokeWidth": 4,
+        "strokeDasharray": "10,5"
+      }
+    }
+  ],
+  "secciones": [
+    {
+      "id": 1,
+      "nombre": "Café & Letras",
+      "acronimo": "CL",
+      "descripcion": "Seccion Cafe & Letras",
+      "posicion": {
+        "x": 30,
+        "y": 30
+      },
+      "dimensiones": {
+        "width": 210,
+        "height": 95
+      },
+      "estilo": {
+        "fill": "rgba(255, 193, 7, 0.1)",
+        "stroke": "#FFC107",
+        "strokeWidth": 3
+      },
+      "subsecciones": [
+        {
+          "id": 1,
+          "nombre": "Reja",
+          "descripcion": "Subseccion que se encuentra en la seccion Cafe & Letras ",
+          "posicion": {
+            "x": 30,
+            "y": 30
+          },
+          "dimensiones": {
+            "width": 210,
+            "height": 45
+          },
+          "estilo": {
+            "fill": "rgba(255, 193, 7, 0.05)",
+            "stroke": "#FFA000",
+            "strokeWidth": 2
+          },
+          "puntos_parqueo": [
+            {
+              "id": 1,
+              "posicion": {
+                "x": 0,
+                "y": 0
+              },
+              "dimensiones": {
+                "width": 45,
+                "height": 35
+              },
+              "poligono": [0, 0, 45, 0, 45, 35, 0, 35],
+              "estado": "disponible",
+              "tipo": "regular",
+              "descripcion": "Este punto se encuentra en la sección café y letras en la subsección reja",
+              "estilo": {
+                "stroke": "#ffffff",
+                "strokeWidth": 2,
+                "rx": 3
+              }
+            },
+            {
+              "id": 2,
+              "posicion": {
+                "x": 50,
+                "y": 0
+              },
+              "dimensiones": {
+                "width": 45,
+                "height": 35
+              },
+              "poligono": [50, 0, 95, 0, 95, 35, 50, 35],
+              "estado": "ocupado",
+              "tipo": "regular",
+              "descripcion": "Este punto se encuentra en la sección café y letras en la subsección reja",
+              "estilo": {
+                "stroke": "#ffffff",
+                "strokeWidth": 2,
+                "rx": 3
+              }
+            },
+            {
+              "id": 3,
+              "posicion": {
+                "x": 100,
+                "y": 0
+              },
+              "dimensiones": {
+                "width": 45,
+                "height": 35
+              },
+              "poligono": [100, 0, 145, 0, 145, 35, 100, 35],
+              "estado": "disponible",
+              "tipo": "regular",
+              "descripcion": "Este punto se encuentra en la sección café y letras en la subsección reja",
+              "estilo": {
+                "stroke": "#ffffff",
+                "strokeWidth": 2,
+                "rx": 3
+              }
+            },
+            {
+              "id": 4,
+              "posicion": {
+                "x": 150,
+                "y": 0
+              },
+              "dimensiones": {
+                "width": 45,
+                "height": 35
+              },
+              "poligono": [150, 0, 195, 0, 195, 35, 150, 35],
+              "estado": "reservado",
+              "tipo": "discapacitados",
+              "descripcion": "Este punto se encuentra en la sección café y letras en la subsección reja",
+              "estilo": {
+                "stroke": "#ffffff",
+                "strokeWidth": 2,
+                "rx": 3
+              }
+            },
+            {
+              "id": 5,
+              "posicion": {
+                "x": 0,
+                "y": 50
+              },
+              "dimensiones": {
+                "width": 45,
+                "height": 35
+              },
+              "poligono": [0, 50, 45, 50, 45, 85, 0, 85],
+              "estado": "disponible",
+              "tipo": "regular",
+              "descripcion": "Este punto se encuentra en la sección café y letras en la subsección reja",
+              "estilo": {
+                "stroke": "#ffffff",
+                "strokeWidth": 2,
+                "rx": 3
+              }
+            }
+          ]
+        },
+        {
+          "id": 2,
+          "nombre": "Café Isla",
+          "descripcion": "Seccion café y letras junto a la puerta de entrada",
+          "posicion": {
+            "x": 30,
+            "y": 30
+          },
+          "dimensiones": {
+            "width": 210,
+            "height": 45
+          },
+          "estilo": {
+            "fill": "rgba(255, 193, 7, 0.05)",
+            "stroke": "#FFA000",
+            "strokeWidth": 2
+          },
+          "puntos_parqueo": [
+            {
+              "id": 1,
+              "posicion": {
+                "x": 0,
+                "y": 0
+              },
+              "dimensiones": {
+                "width": 45,
+                "height": 35
+              },
+              "poligono": [0, 0, 45, 0, 45, 35, 0, 35],
+              "estado": "disponible",
+              "tipo": "regular",
+              "descripcion": "Este punto se encuentra en la sección café y letras  en la subsección Cafe Isla, junto a la puerta de entrada",
+              "estilo": {
+                "stroke": "#ffffff",
+                "strokeWidth": 2,
+                "rx": 3
+              }
+            },
+            {
+              "id": 2,
+              "posicion": {
+                "x": 50,
+                "y": 0
+              },
+              "dimensiones": {
+                "width": 45,
+                "height": 35
+              },
+              "poligono": [50, 0, 95, 0, 95, 35, 50, 35],
+              "estado": "ocupado",
+              "tipo": "regular",
+              "descripcion": "Este punto se encuentra en la sección café y letras  en la subsección Cafe Isla, junto a la puerta de entrada",
+              "estilo": {
+                "stroke": "#ffffff",
+                "strokeWidth": 2,
+                "rx": 3
+              }
+            }
+          ]
+        },
+        {
+          "id": 3,
+          "nombre": "Parque",
+          "descripcion": "Sección café y letras junto a las mesas y casetas",
+          "posicion": {
+            "x": 30,
+            "y": 30
+          },
+          "dimensiones": {
+            "width": 210,
+            "height": 45
+          },
+          "estilo": {
+            "fill": "rgba(255, 193, 7, 0.05)",
+            "stroke": "#FFA000",
+            "strokeWidth": 2
+          },
+          "puntos_parqueo": [
+            {
+              "id": 1,
+              "posicion": {
+                "x": 0,
+                "y": 0
+              },
+              "dimensiones": {
+                "width": 45,
+                "height": 35
+              },
+              "poligono": [0, 0, 45, 0, 45, 35, 0, 35],
+              "estado": "disponible",
+              "tipo": "regular",
+              "descripcion": "Este punto se encuentra en la sección café y letras en la subsección parque, junto a las mesas y casetas",
+              "estilo": {
+                "stroke": "#ffffff",
+                "strokeWidth": 2,
+                "rx": 3
+              }
+            },
+            {
+              "id": 2,
+              "posicion": {
+                "x": 0,
+                "y": 0
+              },
+              "dimensiones": {
+                "width": 45,
+                "height": 35
+              },
+              "poligono": [0, 0, 45, 0, 45, 35, 0, 35],
+              "estado": "disponible",
+              "tipo": "regular",
+              "descripcion": "Este punto se encuentra en la sección café y letras en la subsección parque, junto a las mesas y casetas",
+              "estilo": {
+                "stroke": "#ffffff",
+                "strokeWidth": 2,
+                "rx": 3
+              }
+            },
+            {
+              "id": 3,
+              "posicion": {
+                "x": 0,
+                "y": 0
+              },
+              "dimensiones": {
+                "width": 45,
+                "height": 35
+              },
+              "poligono": [0, 0, 45, 0, 45, 35, 0, 35],
+              "estado": "disponible",
+              "tipo": "regular",
+              "descripcion": "Este punto se encuentra en la sección café y letras en la subsección parque, junto a las mesas y casetas",
+              "estilo": {
+                "stroke": "#ffffff",
+                "strokeWidth": 2,
+                "rx": 3
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "nombre": "Administración",
+      "acronimo": "ADM",
+      "descripcion": "Seccion Administración",
+      "posicion": {
+        "x": 30,
+        "y": 30
+      },
+      "dimensiones": {
+        "width": 210,
+        "height": 95
+      },
+      "estilo": {
+        "fill": "rgba(255, 193, 7, 0.1)",
+        "stroke": "#FFC107",
+        "strokeWidth": 3
+      },
+      "subsecciones": [
+        {
+          "id": 1,
+          "nombre": "Jardín derecho",
+          "descripcion": "Seccion Administración jardín derecho",
+          "posicion": {
+            "x": 30,
+            "y": 30
+          },
+          "dimensiones": {
+            "width": 210,
+            "height": 45
+          },
+          "estilo": {
+            "fill": "rgba(255, 193, 7, 0.05)",
+            "stroke": "#FFA000",
+            "strokeWidth": 2
+          },
+          "puntos_parqueo": [
+            {
+              "id": 1,
+              "posicion": {
+                "x": 0,
+                "y": 0
+              },
+              "dimensiones": {
+                "width": 45,
+                "height": 35
+              },
+              "poligono": [0, 0, 45, 0, 45, 35, 0, 35],
+              "estado": "disponible",
+              "tipo": "regular",
+              "descripcion": "Este punto se encuentra en la sección Administrativa en la subsección jardín derecho, junto al bloque de administración en el cual se encuentra el CETIC",
+              "estilo": {
+                "stroke": "#ffffff",
+                "strokeWidth": 2,
+                "rx": 3
+              }
+            },
+            {
+              "id": 2,
+              "posicion": {
+                "x": 50,
+                "y": 0
+              },
+              "dimensiones": {
+                "width": 45,
+                "height": 35
+              },
+              "poligono": [50, 0, 95, 0, 95, 35, 50, 35],
+              "estado": "ocupado",
+              "tipo": "regular",
+              "descripcion": "Este punto se encuentra en la sección Administrativa en la subsección jardín derecho, junto al bloque de administración en el cual se encuentra el CETIC",
+              "estilo": {
+                "stroke": "#ffffff",
+                "strokeWidth": 2,
+                "rx": 3
+              }
+            },
+            {
+              "id": 3,
+              "posicion": {
+                "x": 100,
+                "y": 0
+              },
+              "dimensiones": {
+                "width": 45,
+                "height": 35
+              },
+              "poligono": [100, 0, 145, 0, 145, 35, 100, 35],
+              "estado": "disponible",
+              "tipo": "regular",
+              "descripcion": "Este punto se encuentra en la sección Administrativa en la subsección jardín derecho, junto al bloque de administración en el cual se encuentra el CETIC",
+              "estilo": {
+                "stroke": "#ffffff",
+                "strokeWidth": 2,
+                "rx": 3
+              }
+            },
+            {
+              "id": 4,
+              "posicion": {
+                "x": 150,
+                "y": 0
+              },
+              "dimensiones": {
+                "width": 45,
+                "height": 35
+              },
+              "poligono": [150, 0, 195, 0, 195, 35, 150, 35],
+              "estado": "reservado",
+              "tipo": "discapacitados",
+              "descripcion": "Este punto se encuentra en la sección Administrativa en la subsección jardín derecho, junto al bloque de administración en el cual se encuentra el CETIC",
+              "estilo": {
+                "stroke": "#ffffff",
+                "strokeWidth": 2,
+                "rx": 3
+              }
+            }
+          ]
+        },
+        {
+          "id": 2,
+          "nombre": "Jardín izquierdo",
+          "descripcion": "Seccion Administración jardín izquierdo",
+          "posicion": {
+            "x": 30,
+            "y": 30
+          },
+          "dimensiones": {
+            "width": 210,
+            "height": 45
+          },
+          "estilo": {
+            "fill": "rgba(255, 193, 7, 0.05)",
+            "stroke": "#FFA000",
+            "strokeWidth": 2
+          },
+          "puntos_parqueo": [
+            {
+              "id": 1,
+              "posicion": {
+                "x": 0,
+                "y": 0
+              },
+              "dimensiones": {
+                "width": 45,
+                "height": 35
+              },
+              "poligono": [0, 0, 45, 0, 45, 35, 0, 35],
+              "estado": "disponible",
+              "tipo": "regular",
+              "descripcion": "Este punto se encuentra en la sección Administrativa en la subsección jardín izquierdo, junto al bloque de administración en el cual se encuentra el CETIC",
+              "estilo": {
+                "stroke": "#ffffff",
+                "strokeWidth": 2,
+                "rx": 3
+              }
+            },
+            {
+              "id": 2,
+              "posicion": {
+                "x": 50,
+                "y": 0
+              },
+              "dimensiones": {
+                "width": 45,
+                "height": 35
+              },
+              "poligono": [50, 0, 95, 0, 95, 35, 50, 35],
+              "estado": "ocupado",
+              "tipo": "regular",
+              "descripcion": "Este punto se encuentra en la sección Administrativa en la subsección jardín izquierdo, junto al bloque de administración en el cual se encuentra el CETIC",
+
+              "estilo": {
+                "stroke": "#ffffff",
+                "strokeWidth": 2,
+                "rx": 3
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "nombre": "Central",
+      "acronimo": "CEN",
+      "descripcion": "Seccion Central",
+      "posicion": {
+        "x": 30,
+        "y": 30
+      },
+      "dimensiones": {
+        "width": 210,
+        "height": 95
+      },
+      "estilo": {
+        "fill": "rgba(255, 193, 7, 0.1)",
+        "stroke": "#FFC107",
+        "strokeWidth": 3
+      },
+      "subsecciones": [
+        {
+          "id": 1,
+          "nombre": "Central derecha",
+          "descripcion": "Seccion Central derecha",
+          "posicion": {
+            "x": 30,
+            "y": 30
+          },
+          "dimensiones": {
+            "width": 210,
+            "height": 45
+          },
+          "estilo": {
+            "fill": "rgba(255, 193, 7, 0.05)",
+            "stroke": "#FFA000",
+            "strokeWidth": 2
+          },
+          "puntos_parqueo": [
+            {
+              "id": 1,
+              "posicion": {
+                "x": 0,
+                "y": 0
+              },
+              "dimensiones": {
+                "width": 45,
+                "height": 35
+              },
+              "poligono": [0, 0, 45, 0, 45, 35, 0, 35],
+              "estado": "disponible",
+              "tipo": "regular",
+              "descripcion": "Este punto se encuentra en la sección Central en la subsección central derecha, frente a la entrada principal",
+              "estilo": {
+                "stroke": "#ffffff",
+                "strokeWidth": 2,
+                "rx": 3
+              }
+            },
+            {
+              "id": 2,
+              "posicion": {
+                "x": 50,
+                "y": 0
+              },
+              "dimensiones": {
+                "width": 45,
+                "height": 35
+              },
+              "poligono": [50, 0, 95, 0, 95, 35, 50, 35],
+              "estado": "ocupado",
+              "tipo": "regular",
+              "descripcion": "Este punto se encuentra en la sección Central en la subsección central derecha, frente a la entrada principal",
+              "estilo": {
+                "stroke": "#ffffff",
+                "strokeWidth": 2,
+                "rx": 3
+              }
+            },
+            {
+              "id": 3,
+              "posicion": {
+                "x": 100,
+                "y": 0
+              },
+              "dimensiones": {
+                "width": 45,
+                "height": 35
+              },
+              "poligono": [100, 0, 145, 0, 145, 35, 100, 35],
+              "estado": "disponible",
+              "tipo": "regular",
+              "descripcion": "Este punto se encuentra en la sección Central en la subsección central derecha, frente a la entrada principal",
+              "estilo": {
+                "stroke": "#ffffff",
+                "strokeWidth": 2,
+                "rx": 3
+              }
+            },
+            {
+              "id": 4,
+              "posicion": {
+                "x": 150,
+                "y": 0
+              },
+              "dimensiones": {
+                "width": 45,
+                "height": 35
+              },
+              "poligono": [150, 0, 195, 0, 195, 35, 150, 35],
+              "estado": "reservado",
+              "tipo": "discapacitados",
+              "descripcion": "Este punto se encuentra en la sección Central en la subsección central derecha, frente a la entrada principal",
+              "estilo": {
+                "stroke": "#ffffff",
+                "strokeWidth": 2,
+                "rx": 3
+              }
+            }
+          ]
+        },
+        {
+          "id": 2,
+          "nombre": "Central izquierda",
+          "descripcion": "Seccion Central jardín izquierdo",
+          "posicion": {
+            "x": 30,
+            "y": 30
+          },
+          "dimensiones": {
+            "width": 210,
+            "height": 45
+          },
+          "estilo": {
+            "fill": "rgba(255, 193, 7, 0.05)",
+            "stroke": "#FFA000",
+            "strokeWidth": 2
+          },
+          "puntos_parqueo": [
+            {
+              "id": 1,
+              "posicion": {
+                "x": 0,
+                "y": 0
+              },
+              "dimensiones": {
+                "width": 45,
+                "height": 35
+              },
+              "poligono": [0, 0, 45, 0, 45, 35, 0, 35],
+              "estado": "disponible",
+              "tipo": "regular",
+              "descripcion": "Este punto se encuentra en la sección Central en la subsección central izquierda, frente a la entrada principal, destinado para discapacitados",
+              "estilo": {
+                "stroke": "#ffffff",
+                "strokeWidth": 2,
+                "rx": 3
+              }
+            },
+            {
+              "id": 2,
+              "posicion": {
+                "x": 50,
+                "y": 0
+              },
+              "dimensiones": {
+                "width": 45,
+                "height": 35
+              },
+              "poligono": [50, 0, 95, 0, 95, 35, 50, 35],
+              "estado": "ocupado",
+              "tipo": "regular",
+              "descripcion": "Este punto se encuentra en la sección Central en la subsección central izquierda, frente a la entrada principal, destinado para discapacitados",
+
+              "estilo": {
+                "stroke": "#ffffff",
+                "strokeWidth": 2,
+                "rx": 3
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

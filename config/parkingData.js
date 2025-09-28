@@ -1,26 +1,22 @@
-// config/parkingData.js - Actualizado para el formato real del endpoint
-
+import Constants from "expo-constants";
 // Configuración de endpoints por parqueadero
 const PARKING_ENDPOINTS = {
-  // Parqueadero Central - Configuración estructural
-  sede_principal_p1: "http://192.168.214.208:8000/parking/central",
-  sede_central_p1: "http://192.168.214.208:8000/parking/central",
-
+  sede_principal_p1: Constants.expoConfig.extra.EXPO_PUBLIC_PARKING_CENTRAL,
+  sede_central_p1: Constants.expoConfig.extra.EXPO_PUBLIC_PARKING_CENTRAL,
   // Parqueadero Medicina - Configuración estructural
-  parqueadero_medicina_p1: "http://192.168.218.98:8001/parking-medicina",
-  medicina_p1: "http://192.168.218.98:8001/parking-medicina",
+  parqueadero_medicina_p1:
+    Constants.expoConfig.extra.EXPO_PUBLIC_PARKING_MEDICINA,
+  medicina_p1: Constants.expoConfig.extra.EXPO_PUBLIC_PARKING_MEDICINA,
 };
 
 // Configuración de endpoints para estados dinámicos
 const STATE_ENDPOINTS = {
-  sede_principal_p1: "http://192.168.214.208:8000/estados/central",
-  sede_central_p1: "http://192.168.214.208:8000/estados/central",
+  sede_principal_p1: Constants.expoConfig.extra.EXPO_PUBLIC_ESTADOS_CENTRAL,
+  sede_central_p1: Constants.expoConfig.extra.EXPO_PUBLIC_ESTADOS_CENTRAL,
 
-  // Comentados hasta que estén disponibles
-  //parqueadero_medicina_p1: "http://192.168.214.208:8000/estados/medicina",
-  //medicina_p1: "http://192.168.214.208:8000/estados/medicina",
+  //parqueadero_medicina_p1: Constants.expoConfig.extra.EXPO_PUBLIC_ESTADOS_MEDICINA,
+  //medicina_p1: Constants.expoConfig.extra.EXPO_PUBLIC_ESTADOS_MEDICINA,
 };
-
 // Mapeo de IDs principales (evitar duplicados)
 const PRIMARY_PARKING_IDS = {
   sede_principal_p1: "sede_principal_p1", // Este es el principal
@@ -28,7 +24,6 @@ const PRIMARY_PARKING_IDS = {
   parqueadero_medicina_p1: "parqueadero_medicina_p1", // Este es el principal
   medicina_p1: "parqueadero_medicina_p1", // Mapea al principal
 };
-
 // Cache para configuraciones estructurales
 let PARKING_CONFIGS = {};
 

@@ -18,7 +18,11 @@ import { typography } from "../../config/typography";
 import { useLanguage } from "../../context/LanguageContext";
 import { useSession } from "../../context/SessionContext";
 
-const { API_URL, API_URL_LOGIN, eas } = Constants.expoConfig.extra;
+const {
+  EXPO_PUBLIC_API_URL: API_URL,
+  EXPO_PUBLIC_API_URL_LOGIN: API_URL_LOGIN,
+  eas,
+} = Constants.expoConfig.extra;
 const projectId = eas?.projectId;
 
 // Clave para AsyncStorage

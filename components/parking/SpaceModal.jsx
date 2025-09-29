@@ -1,6 +1,6 @@
 // components/parking/SpaceModal.jsx
 import { Ionicons } from "@expo/vector-icons";
-import React from "react";
+import React, { useState } from "react";
 import {
   Alert,
   Modal,
@@ -12,6 +12,7 @@ import {
 } from "react-native";
 import { colors } from "../../config/theme";
 import { typography } from "../../config/typography";
+import { ReservaFormModal } from "./ReservaFormModal";
 
 export const SpaceModal = ({
   visible,
@@ -19,6 +20,8 @@ export const SpaceModal = ({
   onClose,
   onChangeStatus,
 }) => {
+  const [showReservaForm, setShowReservaForm] = useState(false);
+
   const getColorEstado = (estado) => {
     switch (estado) {
       case "disponible":
@@ -35,6 +38,13 @@ export const SpaceModal = ({
   };
 
   const cambiarEstadoEspacio = (nuevoEstado) => {
+    // Si es reserva, mostrar el formulario
+    if (nuevoEstado === "reservado") {
+      setShowReservaForm(true);
+      return;
+    }
+
+    // Para otros estados, mostrar confirmación normal
     Alert.alert(
       "Cambio de Estado",
       `¿Cambiar espacio ${espacioSeleccionado.id} a ${nuevoEstado}?`,
@@ -49,6 +59,13 @@ export const SpaceModal = ({
         },
       ]
     );
+  };
+
+  const handleReservaConfirm = (espacioId, placa) => {
+    // Aquí puedes pasar la placa junto con el cambio de estado
+    onChangeStatus(espacioId, "reservado", { placa });
+    setShowReservaForm(false);
+    onClose();
   };
 
   const statusButtons = [
@@ -86,115 +103,143 @@ export const SpaceModal = ({
   const seccionInfo = espacioSeleccionado.seccionInfo || {};
 
   return (
-    <Modal
-      animationType="slide"
-      transparent={true}
-      visible={visible}
-      onRequestClose={onClose}
-    >
-      <View style={styles.modalOverlay}>
-        <View style={styles.modalContent}>
-          <Text style={styles.modalTitle}>Espacio de Parqueo</Text>
+    <>
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={visible}
+        onRequestClose={onClose}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContent}>
+            <Text style={styles.modalTitle}>Espacio de Parqueo</Text>
 
-          <ScrollView
-            style={styles.infoContainer}
-            showsVerticalScrollIndicator={false}
-          >
-            <View style={styles.infoRow}>
-              <Ionicons name="location" size={16} color={colors.primary} />
-              <Text style={styles.modalInfo}>ID: {espacioSeleccionado.id}</Text>
-            </View>
+            <ScrollView
+              style={styles.infoContainer}
+              showsVerticalScrollIndicator={false}
+            >
+              <View style={styles.infoRow}>
+                <Ionicons name="location" size={16} color={colors.primary} />
+                <Text style={styles.modalInfo}>
+                  ID: {espacioSeleccionado.id}
+                </Text>
+              </View>
 
-            <View style={styles.infoRow}>
-              <Ionicons name="business" size={16} color={colors.primary} />
-              <Text style={styles.modalInfo}>
-                Espacio: {espacioSeleccionado.zona || "N/A"}
-              </Text>
-            </View>
+              <View style={styles.infoRow}>
+                <Ionicons name="business" size={16} color={colors.primary} />
+                <Text style={styles.modalInfo}>
+                  Espacio: {espacioSeleccionado.zona || "N/A"}
+                </Text>
+              </View>
 
-            {/* Nueva información de sección */}
-            {tieneSeccionInfo && (
-              <>
-                <View style={styles.infoRow}>
-                  <Ionicons name="layers" size={16} color={colors.primary} />
-                  <Text style={styles.modalInfo}>
-                    Sección:{" "}
-                    {seccionInfo.seccionNombre ||
-                      espacioSeleccionado._seccionNombre ||
-                      "N/A"}
-                  </Text>
-                </View>
+              {tieneSeccionInfo && (
+                <>
+                  <View style={styles.infoRow}>
+                    <Ionicons name="layers" size={16} color={colors.primary} />
+                    <Text style={styles.modalInfo}>
+                      Sección:{" "}
+                      {seccionInfo.seccionNombre ||
+                        espacioSeleccionado._seccionNombre ||
+                        "N/A"}
+                    </Text>
+                  </View>
 
-                <View style={styles.infoRow}>
-                  <Ionicons name="grid" size={16} color={colors.primary} />
-                  <Text style={styles.modalInfo}>
-                    Subsección: {espacioSeleccionado._subseccionId || "N/A"}
-                  </Text>
-                </View>
-              </>
-            )}
+                  <View style={styles.infoRow}>
+                    <Ionicons name="grid" size={16} color={colors.primary} />
+                    <Text style={styles.modalInfo}>
+                      Subsección: {espacioSeleccionado._subseccionId || "N/A"}
+                    </Text>
+                  </View>
+                </>
+              )}
 
-            <View style={styles.infoRow}>
-              <Ionicons name="car-outline" size={16} color={colors.textSec} />
-              <Text style={styles.modalInfo}>
-                Tipo: {espacioSeleccionado.tipo || "regular"}
-              </Text>
-            </View>
+              <View style={styles.infoRow}>
+                <Ionicons name="car-outline" size={16} color={colors.textSec} />
+                <Text style={styles.modalInfo}>
+                  Tipo: {espacioSeleccionado.tipo || "regular"}
+                </Text>
+              </View>
 
-            <View style={styles.infoRow}>
-              <Ionicons
-                name="analytics"
-                size={16}
-                color={getColorEstado(espacioSeleccionado.estado)}
-              />
-              <Text
-                style={[
-                  styles.modalInfo,
-                  { color: getColorEstado(espacioSeleccionado.estado) },
-                ]}
-              >
-                Estado: {espacioSeleccionado.estado.toUpperCase()}
-              </Text>
-            </View>
-          </ScrollView>
-
-          <View style={styles.modalButtons}>
-            {statusButtons
-              .filter((button) => button.estado !== espacioSeleccionado.estado)
-              .map((button) => (
-                <TouchableOpacity
-                  key={button.estado}
-                  style={[styles.button, { backgroundColor: button.color }]}
-                  onPress={() => cambiarEstadoEspacio(button.estado)}
-                  activeOpacity={0.8}
+              {/*<View style={styles.infoRow}>
+                <Ionicons
+                  name="analytics"
+                  size={16}
+                  color={getColorEstado(espacioSeleccionado.estado)}
+                />
+                <Text
+                  style={[
+                    styles.modalInfo,
+                    { color: getColorEstado(espacioSeleccionado.estado) },
+                  ]}
                 >
-                  <Ionicons
-                    name={button.icon}
-                    size={16}
-                    color={colors.white}
-                    style={styles.buttonIcon}
-                  />
-                  <Text style={styles.buttonText}>{button.label}</Text>
-                </TouchableOpacity>
-              ))}
-          </View>
+                  Estado: {espacioSeleccionado.estado.toUpperCase()}
+                </Text>
+              </View>*/}
 
-          <TouchableOpacity
-            style={[styles.button, styles.closeButton]}
-            onPress={onClose}
-            activeOpacity={0.8}
-          >
-            <Ionicons
-              name="close"
-              size={16}
-              color={colors.white}
-              style={styles.buttonIcon}
-            />
-            <Text style={styles.buttonText}>Cerrar</Text>
-          </TouchableOpacity>
+              {/* Mostrar placa si está reservado */}
+              {espacioSeleccionado.estado === "reservado" &&
+                espacioSeleccionado.placa && (
+                  <View style={styles.infoRow}>
+                    <Ionicons
+                      name="document-text"
+                      size={16}
+                      color={colors.primary}
+                    />
+                    <Text style={styles.modalInfo}>
+                      Placa: {espacioSeleccionado.placa}
+                    </Text>
+                  </View>
+                )}
+            </ScrollView>
+
+            <View style={styles.modalButtons}>
+              {statusButtons
+                .filter(
+                  (button) => button.estado !== espacioSeleccionado.estado
+                )
+                .map((button) => (
+                  <TouchableOpacity
+                    key={button.estado}
+                    style={[styles.button, { backgroundColor: button.color }]}
+                    onPress={() => cambiarEstadoEspacio(button.estado)}
+                    activeOpacity={0.8}
+                  >
+                    <Ionicons
+                      name={button.icon}
+                      size={16}
+                      color={colors.white}
+                      style={styles.buttonIcon}
+                    />
+                    <Text style={styles.buttonText}>{button.label}</Text>
+                  </TouchableOpacity>
+                ))}
+            </View>
+
+            <TouchableOpacity
+              style={[styles.button, styles.closeButton]}
+              onPress={onClose}
+              activeOpacity={0.8}
+            >
+              <Ionicons
+                name="close"
+                size={16}
+                color={colors.white}
+                style={styles.buttonIcon}
+              />
+              <Text style={styles.buttonText}>Cerrar</Text>
+            </TouchableOpacity>
+          </View>
         </View>
-      </View>
-    </Modal>
+      </Modal>
+
+      {/* Modal de formulario de reserva */}
+      <ReservaFormModal
+        visible={showReservaForm}
+        espacioId={espacioSeleccionado?.id}
+        onClose={() => setShowReservaForm(false)}
+        onConfirm={handleReservaConfirm}
+      />
+    </>
   );
 };
 
@@ -243,42 +288,6 @@ const styles = StyleSheet.create({
     marginLeft: 8,
     color: colors.text,
     flex: 1,
-  },
-  descriptionContainer: {
-    flexDirection: "row",
-    alignItems: "flex-start",
-    paddingVertical: 10,
-    paddingHorizontal: 12,
-    backgroundColor: colors.base,
-    borderRadius: 8,
-    marginBottom: 8,
-    borderLeftWidth: 3,
-    borderLeftColor: colors.primary,
-  },
-  descriptionText: {
-    ...typography.regular.small,
-    marginLeft: 8,
-    color: colors.text,
-    flex: 1,
-    lineHeight: 18,
-  },
-  technicalInfo: {
-    flexDirection: "row",
-    alignItems: "center",
-    paddingVertical: 4,
-    paddingHorizontal: 8,
-  },
-  technicalText: {
-    ...typography.regular.small,
-    marginLeft: 6,
-    color: colors.textSec,
-    fontSize: 11,
-  },
-  actionsTitle: {
-    ...typography.semibold.medium,
-    color: colors.text,
-    marginBottom: 16,
-    alignSelf: "flex-start",
   },
   modalButtons: {
     flexDirection: "row",

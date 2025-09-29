@@ -153,10 +153,7 @@ export default function ParkingMapScreen() {
           <TouchableOpacity
             style={[styles.button, styles.retryButton]}
             onPress={loadParkingInfo}
-          >
-            <Ionicons name="refresh" size={16} color={colors.white} />
-            <Text style={styles.buttonText}>Reintentar</Text>
-          </TouchableOpacity>
+          ></TouchableOpacity>
 
           <TouchableOpacity
             style={[styles.button, styles.backButton]}
@@ -204,9 +201,9 @@ export default function ParkingMapScreen() {
           <Text style={styles.headerSubtitle}>{parkingInfo.descripcion}</Text>
         </View>
 
-        <TouchableOpacity onPress={handleRefresh} style={styles.refreshButton}>
+        {/* Refresh icon <TouchableOpacity onPress={handleRefresh} style={styles.refreshButton}>
           <Ionicons name="refresh" size={16} color={colors.textSec} />
-        </TouchableOpacity>
+        </TouchableOpacity>*/}
       </View>
 
       {/* Estadísticas rápidas */}
@@ -338,7 +335,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   headerTitle: {
-    ...typography.semibold.regular,
+    ...typography.semibold.medium,
     color: colors.text,
     marginBottom: 2,
   },

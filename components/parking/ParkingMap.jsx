@@ -101,7 +101,11 @@ export const ParkingMap = ({ parkingId }) => {
     setModalVisible(true);
   };
 
-  const handleChangeStatus = async (espacioId, nuevoEstado) => {
+  const handleChangeStatus = async (
+    espacioId,
+    nuevoEstado,
+    datosAdicionales
+  ) => {
     try {
       const success = await updateSpaceStatus(
         parkingId,
@@ -127,6 +131,12 @@ export const ParkingMap = ({ parkingId }) => {
                   ...zona.espacios[espacioIndex],
                   estado: nuevoEstado,
                   lastUpdated: new Date().toISOString(),
+                  // Agregar la placa si viene en datosAdicionales
+                  ...(datosAdicionales?.placa && {
+                    placa: datosAdicionales.placa,
+                  }),
+                  // Si el estado cambia a algo diferente de reservado, limpiar la placa
+                  ...(nuevoEstado !== "reservado" && { placa: null }),
                 };
               }
             }
@@ -135,9 +145,13 @@ export const ParkingMap = ({ parkingId }) => {
           setParkingConfig(configActualizado);
         }
 
+        const mensajeExtra = datosAdicionales?.placa
+          ? ` - Placa: ${datosAdicionales.placa}`
+          : "";
+
         Alert.alert(
           "Estado actualizado",
-          `Espacio ${espacioId} cambiado a ${nuevoEstado}`
+          `Espacio ${espacioId} cambiado a ${nuevoEstado}${mensajeExtra}`
         );
       } else {
         Alert.alert("❌ Error", "No se pudo actualizar el estado del espacio");

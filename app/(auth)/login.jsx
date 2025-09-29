@@ -23,26 +23,23 @@ const {
   EXPO_PUBLIC_API_URL_LOGIN: API_URL_LOGIN,
   eas,
 } = Constants.expoConfig.extra;
-const projectId = eas?.projectId;
 
-// Clave para AsyncStorage
 const LAST_EMAIL_KEY = "@last_login_email";
+const validateEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
 export default function LoginScreen() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const { t } = useLanguage();
+  const { setUsername, guardarSesionCompleta } = useSession();
 
   const [correo, setCorreo] = useState("");
   const [contrasena, setContrasena] = useState("");
-  const [errors, setErrors] = useState({}); // Cambio: objeto en vez de string
+  const [errors, setErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingEmail, setIsLoadingEmail] = useState(true);
   const [rememberEmail, setRememberEmail] = useState(true);
 
-  const { setUsername, guardarSesionCompleta } = useSession();
-
-  // Cargar email guardado al iniciar la pantalla
   useEffect(() => {
     loadSavedEmail();
   }, []);
@@ -50,76 +47,155 @@ export default function LoginScreen() {
   const loadSavedEmail = async () => {
     try {
       const savedEmail = await AsyncStorage.getItem(LAST_EMAIL_KEY);
-      if (savedEmail) {
-        setCorreo(savedEmail);
-        setRememberEmail(true);
-      } else {
-        setRememberEmail(true);
-      }
+      if (savedEmail) setCorreo(savedEmail);
     } catch (error) {
-      console.log("Error cargando email guardado:", error);
+      console.log("Error cargando email:", error);
     } finally {
       setIsLoadingEmail(false);
     }
   };
 
-  const saveEmail = async (email) => {
+  const handleInputChange = (field) => (value) => {
+    field === "email" ? setCorreo(value) : setContrasena(value);
+    setErrors((prev) => ({ ...prev, [field]: null, general: null }));
+  };
+
+  const validateForm = () => {
+    if (!correo.trim()) {
+      setErrors({ email: t("validation.emailRequired") });
+      return false;
+    }
+    if (!contrasena.trim()) {
+      setErrors({ password: t("validation.passwordRequired") });
+      return false;
+    }
+    if (!validateEmail(correo)) {
+      setErrors({ email: t("validation.emailInvalid") });
+      return false;
+    }
+    return true;
+  };
+
+  const handleEmailStorage = async () => {
     try {
-      await AsyncStorage.setItem(LAST_EMAIL_KEY, email);
+      if (rememberEmail) {
+        await AsyncStorage.setItem(LAST_EMAIL_KEY, correo.trim());
+      } else {
+        await AsyncStorage.removeItem(LAST_EMAIL_KEY);
+      }
     } catch (error) {
-      console.log("Error guardando email:", error);
+      console.log("Error con email storage:", error);
     }
   };
 
-  const validateEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-
-  // Funciones para limpiar errores individuales cuando usuario escribe
-  const handleEmailChange = (value) => {
-    setCorreo(value);
-    if (errors.email) {
-      setErrors((prev) => ({ ...prev, email: null }));
+  const handleUserStateRedirect = (usuarioEstado) => {
+    if (usuarioEstado === 2) {
+      router.replace("/registro-persona");
+      return true;
     }
-    // También limpiar error general si existe
-    if (errors.general) {
-      setErrors((prev) => ({ ...prev, general: null }));
+    if (usuarioEstado === 3) {
+      router.replace("/registro-empresa");
+      return true;
+    }
+    return false;
+  };
+
+  const saveSession = async (data) => {
+    const { token, empresaId, rolId, rolesByCompany } = data;
+
+    await setUsername(correo.trim());
+
+    const empresaActual =
+      rolesByCompany.find(
+        (e) => e.empresaId === empresaId && e.rolId === rolId
+      ) || rolesByCompany[0];
+
+    if (!empresaActual) {
+      console.warn("No se encontró empresa, usando primera disponible");
+    }
+
+    await guardarSesionCompleta({
+      token,
+      empresaId: empresaActual.empresaId,
+      rolId: empresaActual.rolId,
+      empresaNombre: empresaActual.empresaNombre,
+      rolNombre: empresaActual.rolNombre,
+      rolesByCompany,
+    });
+  };
+
+  const configurarNotificacionesPush = async (userEmail) => {
+    if (!Device.isDevice) return;
+
+    try {
+      const Notifications = await import("expo-notifications");
+
+      Notifications.setNotificationHandler({
+        handleNotification: async () => ({
+          shouldShowAlert: true,
+          shouldPlaySound: true,
+          shouldSetBadge: false,
+        }),
+      });
+
+      let { status } = await Notifications.getPermissionsAsync();
+
+      if (status !== "granted") {
+        ({ status } = await Notifications.requestPermissionsAsync());
+      }
+
+      if (status === "granted") {
+        const pushToken = (
+          await Notifications.getExpoPushTokenAsync({
+            projectId: eas?.projectId || "local/FrontendMovil",
+          })
+        ).data;
+
+        await fetch(`${API_URL}/notifications/token`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ userId: userEmail, token: pushToken }),
+        });
+
+        Notifications.addNotificationReceivedListener((notification) => {
+          console.log("Notificación recibida:", notification);
+        });
+      }
+    } catch (error) {
+      console.error("Error configurando notificaciones:", error);
     }
   };
 
-  const handlePasswordChange = (value) => {
-    setContrasena(value);
-    if (errors.password) {
-      setErrors((prev) => ({ ...prev, password: null }));
+  const getErrorMessage = (err) => {
+    const statusErrors = {
+      401: "loginFailed",
+      404: "accountNotFound",
+      400: "invalidData",
+    };
+
+    if (err.response?.status && statusErrors[err.response.status]) {
+      return t(`errors.${statusErrors[err.response.status]}`);
     }
-    // También limpiar error general si existe
-    if (errors.general) {
-      setErrors((prev) => ({ ...prev, general: null }));
+
+    if (
+      err.message?.includes("Network Error") ||
+      err.code === "NETWORK_ERROR"
+    ) {
+      return t("errors.networkError");
     }
+
+    if (err.message?.includes("timeout")) {
+      return t("errors.connectionTimeout");
+    }
+
+    return t("errors.unknownError");
   };
 
   const handleLogin = async () => {
-    if (isLoading) return;
+    if (isLoading || !validateForm()) return;
 
-    setErrors({}); // Cambio: limpiar objeto
     setIsLoading(true);
-
-    // Validaciones que asignan a campos específicos
-    if (!correo.trim()) {
-      setErrors({ email: t("validation.emailRequired") });
-      setIsLoading(false);
-      return;
-    }
-
-    if (!contrasena.trim()) {
-      setErrors({ password: t("validation.passwordRequired") });
-      setIsLoading(false);
-      return;
-    }
-
-    if (!validateEmail(correo)) {
-      setErrors({ email: t("validation.emailInvalid") });
-      setIsLoading(false);
-      return;
-    }
+    setErrors({});
 
     try {
       const response = await axios.post(`${API_URL}${API_URL_LOGIN}`, {
@@ -132,174 +208,36 @@ export default function LoginScreen() {
 
       if (!token) {
         setErrors({ general: "Error: No se recibió token del servidor" });
-        setIsLoading(false);
         return;
       }
 
-      // Guardar email solo si el usuario quiere recordarlo
-      if (rememberEmail) {
-        await saveEmail(correo.trim());
-      } else {
-        await AsyncStorage.removeItem(LAST_EMAIL_KEY);
-      }
+      await handleEmailStorage();
 
-      // Validaciones de estado del usuario
-      if (usuarioEstado === 2) {
-        router.replace("/registro-persona");
-        setIsLoading(false);
-        return;
-      } else if (usuarioEstado === 3) {
-        router.replace("/registro-empresa");
-        setIsLoading(false);
-        return;
-      }
+      if (handleUserStateRedirect(usuarioEstado)) return;
 
-      if (!rolesByCompany || rolesByCompany.length === 0) {
+      if (!rolesByCompany?.length) {
         setErrors({ general: t("errors.noAssociatedCompanies") });
-        setIsLoading(false);
         return;
       }
 
-      await setUsername(correo.trim());
-
-      const empresaActual = rolesByCompany.find(
-        (empresa) => empresa.empresaId === empresaId && empresa.rolId === rolId
-      );
-
-      if (!empresaActual) {
-        console.warn(
-          "No se encontró empresa actual, usando primera disponible"
-        );
-        const primeraEmpresa = rolesByCompany[0];
-        await guardarSesionCompleta({
-          token,
-          empresaId: primeraEmpresa.empresaId,
-          rolId: primeraEmpresa.rolId,
-          empresaNombre: primeraEmpresa.empresaNombre,
-          rolNombre: primeraEmpresa.rolNombre,
-          rolesByCompany,
-        });
-      } else {
-        await guardarSesionCompleta({
-          token,
-          empresaId,
-          rolId,
-          empresaNombre: empresaActual.empresaNombre,
-          rolNombre: empresaActual.rolNombre,
-          rolesByCompany,
-        });
-      }
-
+      await saveSession(response.data);
       await configurarNotificacionesPush(correo.trim());
 
       router.replace("/parking-selector");
     } catch (err) {
       console.error("Error en login:", err);
-      console.error("Detalles del error:", {
-        message: err.message,
-        response: err.response?.data,
-        status: err.response?.status,
-      });
-
-      // Manejo de errores - todos van como error general
-      let errorMessage;
-      if (err.response?.status === 401) {
-        errorMessage = t("errors.loginFailed");
-      } else if (err.response?.status === 404) {
-        errorMessage = t("errors.accountNotFound");
-      } else if (err.response?.status === 400) {
-        errorMessage = t("errors.invalidData");
-      } else if (
-        err.message?.includes("Network Error") ||
-        err.code === "NETWORK_ERROR"
-      ) {
-        errorMessage = t("errors.networkError");
-      } else if (err.message?.includes("timeout")) {
-        errorMessage = t("errors.connectionTimeout");
-      } else {
-        errorMessage = t("errors.unknownError");
-      }
-
-      setErrors({ general: errorMessage });
+      setErrors({ general: getErrorMessage(err) });
     } finally {
       setIsLoading(false);
     }
   };
 
-  // Notificaciones Push con importación dinámica
-  const configurarNotificacionesPush = async (userEmail) => {
-    try {
-      if (!Device.isDevice) {
-        console.log(
-          "No es un dispositivo físico, saltando notificaciones push"
-        );
-        return;
-      }
-
-      const Notifications = await import("expo-notifications");
-
-      Notifications.setNotificationHandler({
-        handleNotification: async () => ({
-          shouldShowAlert: true,
-          shouldPlaySound: true,
-          shouldSetBadge: false,
-        }),
-      });
-
-      const { status: existingStatus } =
-        await Notifications.getPermissionsAsync();
-      let finalStatus = existingStatus;
-
-      if (finalStatus !== "granted") {
-        const { status } = await Notifications.requestPermissionsAsync();
-        finalStatus = status;
-      }
-
-      if (finalStatus === "granted") {
-        const pushToken = (
-          await Notifications.getExpoPushTokenAsync({
-            projectId: projectId || "local/FrontendMovil",
-          })
-        ).data;
-
-        console.log("Token de notificaciones obtenido:", pushToken);
-
-        const notificationEndpoint = `${API_URL}/notifications/token`;
-
-        await fetch(notificationEndpoint, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            userId: userEmail,
-            token: pushToken,
-          }),
-        });
-
-        const subscription = Notifications.addNotificationReceivedListener(
-          (notification) => {
-            console.log("Notificación recibida:", notification);
-          }
-        );
-      } else {
-        console.log("Permisos de notificaciones denegados");
-      }
-    } catch (error) {
-      console.error("Error configurando notificaciones push:", error);
-    }
-  };
-
-  // Mostrar loading mientras carga el email
   if (isLoadingEmail) {
     return (
       <SafeAreaView style={styles.container}>
-        <View style={[styles.logoContainer, { marginTop: insets.top + 0 }]}>
-          <View style={[styles.logoContainer, { marginTop: insets.top + 0 }]}>
-            <Ionicons name="car-outline" size={64} color={colors.secondary} />
-          </View>
+        <View style={[styles.logoContainer, { marginTop: insets.top }]}>
+          <Ionicons name="car-outline" size={64} color={colors.secondary} />
         </View>
-
         <Text style={styles.loadingText}>{t("common.loading")}</Text>
       </SafeAreaView>
     );
@@ -307,21 +245,12 @@ export default function LoginScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={[styles.logoContainer, { marginTop: insets.top + 0 }]}>
-        <Text
-          style={{
-            ...typography.bold.big,
-            fontSize: 28,
-            color: colors.tertiary,
-          }}
-        >
-          ParkingApp
-        </Text>
+      <View style={[styles.logoContainer, { marginTop: insets.top }]}>
+        <Text style={styles.appTitle}>ParkingApp</Text>
       </View>
 
       <Text style={styles.title}>{t("auth.loginTitle")}</Text>
 
-      {/* Error general para errores de servidor */}
       {errors.general && (
         <Text style={styles.generalError}>{errors.general}</Text>
       )}
@@ -330,26 +259,25 @@ export default function LoginScreen() {
         label={t("auth.email")}
         placeholder={t("auth.enterEmail")}
         value={correo}
-        onChangeText={handleEmailChange} // Cambio: función que limpia errores
+        onChangeText={handleInputChange("email")}
         icon="mail-outline"
         keyboardType="email-address"
         editable={!isLoading}
-        error={errors.email} // Cambio: error específico del campo (se pone rojo)
+        error={errors.email}
       />
 
       <CustomInput
         label={t("auth.password")}
         placeholder={t("auth.enterPassword")}
         value={contrasena}
-        onChangeText={handlePasswordChange} // Cambio: función que limpia errores
+        onChangeText={handleInputChange("password")}
         icon="lock-closed-outline"
-        secureTextEntry={true}
-        showPasswordToggle={true}
+        secureTextEntry
+        showPasswordToggle
         editable={!isLoading}
-        error={errors.password} // Cambio: error específico del campo (se pone rojo)
+        error={errors.password}
       />
 
-      {/* Fila con checkbox "Recordarme" y link "Olvidaste contraseña" */}
       <View style={styles.optionsRow}>
         <TouchableOpacity
           style={styles.checkboxContainer}
@@ -408,7 +336,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingHorizontal: 24,
-    paddingTop: 0,
     backgroundColor: colors.white,
   },
   logoContainer: {
@@ -417,12 +344,55 @@ const styles = StyleSheet.create({
     paddingBottom: 20,
     marginBottom: 20,
   },
+  appTitle: {
+    ...typography.bold.big,
+    fontSize: 28,
+    color: colors.tertiary,
+  },
   title: {
     ...typography.bold.big,
     fontSize: 26,
     marginTop: 8,
     marginBottom: 16,
     color: colors.tertiary,
+  },
+  loadingText: {
+    textAlign: "center",
+    color: colors.textSec,
+    marginTop: 20,
+    ...typography.regular.regular,
+  },
+  generalError: {
+    color: colors.red,
+    marginBottom: 16,
+    textAlign: "center",
+    ...typography.regular.regular,
+    backgroundColor: colors.errorLight || "#ffebee",
+    padding: 12,
+    borderRadius: 8,
+  },
+  optionsRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginTop: 12,
+    marginBottom: 8,
+  },
+  checkboxContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    flex: 1,
+  },
+  rememberText: {
+    marginLeft: 6,
+    fontSize: 13,
+    color: colors.textSec,
+    ...typography.regular.medium,
+  },
+  forgotPasswordText: {
+    fontSize: 13,
+    color: colors.secondary,
+    ...typography.semibold.regular,
   },
   dividerContainer: {
     flexDirection: "row",
@@ -450,47 +420,6 @@ const styles = StyleSheet.create({
   },
   registerLink: {
     color: colors.secondary,
-    ...typography.semibold.regular,
-  },
-  loadingText: {
-    textAlign: "center",
-    color: colors.textSec,
-    marginTop: 20,
-    ...typography.regular.regular,
-  },
-  // Error general para errores de servidor
-  generalError: {
-    color: colors.red,
-    marginBottom: 16,
-    textAlign: "center",
-    ...typography.regular.regular,
-    backgroundColor: colors.errorLight || "#ffebee",
-    padding: 12,
-    borderRadius: 8,
-  },
-  // Estilos para la fila con checkbox y forgot password
-  optionsRow: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    marginTop: 12,
-    marginBottom: 8,
-  },
-  checkboxContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    flex: 1,
-  },
-  rememberText: {
-    marginLeft: 6,
-    fontSize: 13,
-    color: colors.textSec,
-    ...typography.regular.medium,
-  },
-  forgotPasswordText: {
-    fontSize: 13,
-    color: colors.secondary,
-    textAlign: "right",
     ...typography.semibold.regular,
   },
 });

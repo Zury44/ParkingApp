@@ -227,7 +227,7 @@ const styles = StyleSheet.create({
     color: colors.text,
   },
   generalError: {
-    color: colors.error,
+    color: colors.red,
     marginBottom: 16,
     textAlign: "center",
     ...typography.regular.regular,

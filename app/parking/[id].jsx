@@ -13,7 +13,6 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-import { ParkingLegend } from "../../components/parking/ParkingLegend";
 import { ParkingMap } from "../../components/parking/ParkingMap";
 import { getParkingStats, loadParkingConfig } from "../../config/parkingData";
 import { colors } from "../../config/theme";
@@ -111,16 +110,8 @@ export default function ParkingMapScreen() {
   };
 
   const handleBackToSelector = () => {
-    Alert.alert(
-      "Volver a Parqueaderos",
-      "¿Deseas volver a la lista de parqueaderos?",
-      [
-        { text: "Cancelar", style: "cancel" },
-        { text: "Volver", onPress: () => router.back() },
-      ]
-    );
+    router.back();
   };
-
   const handleRefresh = () => {
     Alert.alert(
       "Actualizar Datos",
@@ -154,7 +145,7 @@ export default function ParkingMapScreen() {
   if (error) {
     return (
       <SafeAreaView style={styles.errorContainer}>
-        <Ionicons name="alert-circle-outline" size={48} color={colors.error} />
+        <Ionicons name="alert-circle-outline" size={48} color={colors.red} />
         <Text style={styles.errorTitle}>Error al cargar parqueadero</Text>
         <Text style={styles.errorText}>{error}</Text>
 
@@ -259,9 +250,6 @@ export default function ParkingMapScreen() {
         </View>
       </View>
 
-      {/* Leyenda de colores */}
-      <ParkingLegend />
-
       {/* Mapa del parqueadero */}
       <View style={styles.mapContainer}>
         <ParkingMap parkingId={id} />
@@ -322,7 +310,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.primary,
   },
   backButton: {
-    backgroundColor: colors.gray,
+    backgroundColor: colors.red,
   },
   buttonText: {
     color: colors.white,

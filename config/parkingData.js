@@ -1,9 +1,71 @@
 import Constants from "expo-constants";
+
+// ========================================
+// IMPORTAR JSON DESDE CARPETA /data
+// ========================================
+
+// Importar configuraciones estructurales desde /data
+let sedePrincipalConfig = null;
+let medicinaConfig = null;
+let sedePrincipalStates = null;
+let medicinaStates = null;
+
+try {
+  sedePrincipalConfig = require("../data/sede_principal_p1.json");
+} catch (e) {
+  console.warn("No se encontró sede_principal_p1.json en /data");
+}
+
+try {
+  medicinaConfig = require("../data/parqueadero_medicina_p1.json");
+} catch (e) {
+  console.warn("No se encontró parqueadero_medicina_p1.json en /data");
+}
+
+try {
+  sedePrincipalStates = require("../data/sede_principal_p1_states.json");
+} catch (e) {
+  console.warn("No se encontró sede_principal_p1_states.json en /data");
+}
+
+try {
+  medicinaStates = require("../data/parqueadero_medicina_p1_states.json");
+} catch (e) {
+  console.warn("No se encontró parqueadero_medicina_p1_states.json en /data");
+}
+
+// Mapear configuraciones locales
+const LOCAL_PARKING_CONFIGS = {};
+const LOCAL_PARKING_STATES = {};
+
+if (sedePrincipalConfig) {
+  LOCAL_PARKING_CONFIGS["sede_principal_p1"] = sedePrincipalConfig;
+  LOCAL_PARKING_CONFIGS["sede_central_p1"] = sedePrincipalConfig;
+}
+
+if (medicinaConfig) {
+  LOCAL_PARKING_CONFIGS["parqueadero_medicina_p1"] = medicinaConfig;
+  LOCAL_PARKING_CONFIGS["medicina_p1"] = medicinaConfig;
+}
+
+if (sedePrincipalStates) {
+  LOCAL_PARKING_STATES["sede_principal_p1"] = sedePrincipalStates;
+  LOCAL_PARKING_STATES["sede_central_p1"] = sedePrincipalStates;
+}
+
+if (medicinaStates) {
+  LOCAL_PARKING_STATES["parqueadero_medicina_p1"] = medicinaStates;
+  LOCAL_PARKING_STATES["medicina_p1"] = medicinaStates;
+}
+
+// ========================================
+// CONFIGURACIÓN ORIGINAL
+// ========================================
+
 // Configuración de endpoints por parqueadero
 const PARKING_ENDPOINTS = {
   sede_principal_p1: Constants.expoConfig.extra.EXPO_PUBLIC_PARKING_CENTRAL,
   sede_central_p1: Constants.expoConfig.extra.EXPO_PUBLIC_PARKING_CENTRAL,
-  // Parqueadero Medicina - Configuración estructural
   parqueadero_medicina_p1:
     Constants.expoConfig.extra.EXPO_PUBLIC_PARKING_MEDICINA,
   medicina_p1: Constants.expoConfig.extra.EXPO_PUBLIC_PARKING_MEDICINA,
@@ -13,33 +75,141 @@ const PARKING_ENDPOINTS = {
 const STATE_ENDPOINTS = {
   sede_principal_p1: Constants.expoConfig.extra.EXPO_PUBLIC_ESTADOS_CENTRAL,
   sede_central_p1: Constants.expoConfig.extra.EXPO_PUBLIC_ESTADOS_CENTRAL,
-
   //parqueadero_medicina_p1: Constants.expoConfig.extra.EXPO_PUBLIC_ESTADOS_MEDICINA,
   //medicina_p1: Constants.expoConfig.extra.EXPO_PUBLIC_ESTADOS_MEDICINA,
 };
+
 // Mapeo de IDs principales (evitar duplicados)
 const PRIMARY_PARKING_IDS = {
-  sede_principal_p1: "sede_principal_p1", // Este es el principal
-  sede_central_p1: "sede_principal_p1", // Mapea al principal
-  parqueadero_medicina_p1: "parqueadero_medicina_p1", // Este es el principal
-  medicina_p1: "parqueadero_medicina_p1", // Mapea al principal
+  sede_principal_p1: "sede_principal_p1",
+  sede_central_p1: "sede_principal_p1",
+  parqueadero_medicina_p1: "parqueadero_medicina_p1",
+  medicina_p1: "parqueadero_medicina_p1",
 };
+
 // Cache para configuraciones estructurales
 let PARKING_CONFIGS = {};
 
 // Cache para estados dinámicos
 let PARKING_STATES = {};
 
+// ========================================
+// FUNCIONES DE FALLBACK LOCAL
+// ========================================
+
+/**
+ * Obtiene configuración local desde /data
+ */
+const getLocalParkingConfig = (parkingId) => {
+  const config = LOCAL_PARKING_CONFIGS[parkingId];
+  if (config) {
+    console.log(`📂 Usando configuración local desde /data para ${parkingId}`);
+    return {
+      ...JSON.parse(JSON.stringify(config)), // Deep clone
+      _source: "local_data",
+      _loadedAt: new Date().toISOString(),
+      _isLocal: true,
+    };
+  }
+
+  console.warn(`⚠️ No se encontró configuración local para ${parkingId}`);
+  return null;
+};
+
+/**
+ * Obtiene estados locales desde /data
+ */
+const getLocalParkingStates = (parkingId) => {
+  const states = LOCAL_PARKING_STATES[parkingId];
+  if (states) {
+    console.log(`📂 Usando estados locales desde /data para ${parkingId}`);
+    return {
+      ...JSON.parse(JSON.stringify(states)), // Deep clone
+      _source: "local_data",
+      _loadedAt: new Date().toISOString(),
+      _isLocal: true,
+    };
+  }
+
+  console.warn(`⚠️ No se encontraron estados locales para ${parkingId}`);
+  return null;
+};
+
+/**
+ * Procesa estados desde datos locales
+ */
+const processLocalStates = (parkingId) => {
+  const localStates = getLocalParkingStates(parkingId);
+
+  if (!localStates) {
+    console.warn(`⚠️ No hay estados locales disponibles para ${parkingId}`);
+    return null;
+  }
+
+  let estados = {};
+
+  if (localStates.secciones && Array.isArray(localStates.secciones)) {
+    localStates.secciones.forEach((seccion) => {
+      if (seccion.subsecciones && Array.isArray(seccion.subsecciones)) {
+        seccion.subsecciones.forEach((subseccion) => {
+          if (
+            subseccion.puntos_parqueo &&
+            Array.isArray(subseccion.puntos_parqueo)
+          ) {
+            subseccion.puntos_parqueo.forEach((punto) => {
+              const espacioId = `seccion_${seccion.id}_sub_${subseccion.id}_punto_${punto.id}`;
+              const estadoOriginal = punto.estado;
+              const estadoMapeado = mapearEstadoEndpoint(estadoOriginal);
+
+              estados[espacioId] = {
+                estado: estadoMapeado,
+                estadoOriginal: estadoOriginal,
+                lastUpdated: new Date().toISOString(),
+                seccionId: seccion.id,
+                subseccionId: subseccion.id,
+                puntoId: punto.id,
+              };
+            });
+          }
+        });
+      }
+    });
+  }
+
+  const stateData = {
+    estados,
+    colores: localStates.estado_color || {},
+    _endpoint: "local_data",
+    _loadedAt: new Date().toISOString(),
+    _parkingId: parkingId,
+    _rawData: localStates,
+    _isLocal: true,
+  };
+
+  // Guardar en cache
+  PARKING_STATES[parkingId] = stateData;
+
+  console.log(
+    `✅ Estados locales procesados para ${parkingId}: ${
+      Object.keys(estados).length
+    } espacios`
+  );
+  return stateData;
+};
+
+// ========================================
+// FUNCIONES PRINCIPALES MODIFICADAS
+// ========================================
+
 /**
  * MAPEO DE ESTADOS - Convierte estados del endpoint a estados de la app
  */
 const mapearEstadoEndpoint = (estadoEndpoint) => {
   const mapeoEstados = {
-    desocupado: "disponible", // desocupado → disponible
-    ocupado: "ocupado", // ocupado → ocupado (igual)
-    reservado: "reservado", // reservado → reservado (igual)
+    desocupado: "disponible",
+    ocupado: "ocupado",
+    reservado: "reservado",
   };
-
   return mapeoEstados[estadoEndpoint] || "disponible";
 };
 
@@ -49,7 +219,6 @@ const mapearEstadoAppAEndpoint = (estadoApp) => {
     ocupado: "ocupado",
     reservado: "reservado",
   };
-
   return mapeo[estadoApp] || "desocupado";
 };
 
@@ -75,7 +244,7 @@ const getStateEndpoint = (parkingId) => {
 };
 
 /**
- * ACTUALIZADO: Carga estados desde el formato real del endpoint
+ * ACTUALIZADO: Carga estados con fallback local
  */
 const loadParkingStates = async (parkingId, forceRefresh = false) => {
   try {
@@ -83,9 +252,9 @@ const loadParkingStates = async (parkingId, forceRefresh = false) => {
 
     if (!stateEndpoint) {
       console.warn(
-        `⚠️ No hay endpoint de estados configurado para ${parkingId}`
+        `⚠️ No hay endpoint de estados configurado para ${parkingId}, usando datos locales`
       );
-      return null;
+      return processLocalStates(parkingId);
     }
 
     // Si ya está en cache y no se fuerza refresh, usar cache
@@ -95,105 +264,247 @@ const loadParkingStates = async (parkingId, forceRefresh = false) => {
     }
 
     console.log(
-      `🔄 Cargando estados desde ${stateEndpoint} para ${parkingId}...`
+      `🔄 Intentando cargar estados desde ${stateEndpoint} para ${parkingId}...`
     );
 
-    const response = await fetch(stateEndpoint, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      timeout: 5000,
-    });
+    try {
+      const response = await fetch(stateEndpoint, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        timeout: 2000,
+      });
 
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
 
-    const data = await response.json();
-    console.log(`📦 Datos del endpoint de estados:`, data);
+      const data = await response.json();
+      console.log(`📦 Datos del endpoint de estados:`, data);
 
-    // PROCESAMIENTO ESPECÍFICO PARA TU FORMATO DE ENDPOINT
-    let estados = {};
+      // Procesar datos del endpoint
+      let estados = {};
 
-    if (data.secciones && Array.isArray(data.secciones)) {
+      if (data.secciones && Array.isArray(data.secciones)) {
+        console.log(
+          `🏗️ Procesando ${data.secciones.length} secciones del endpoint...`
+        );
+
+        data.secciones.forEach((seccion, seccionIndex) => {
+          if (seccion.subsecciones && Array.isArray(seccion.subsecciones)) {
+            seccion.subsecciones.forEach((subseccion, subseccionIndex) => {
+              if (
+                subseccion.puntos_parqueo &&
+                Array.isArray(subseccion.puntos_parqueo)
+              ) {
+                subseccion.puntos_parqueo.forEach((punto) => {
+                  const espacioId = `seccion_${seccion.id}_sub_${subseccion.id}_punto_${punto.id}`;
+                  const estadoOriginal = punto.estado;
+                  const estadoMapeado = mapearEstadoEndpoint(estadoOriginal);
+
+                  estados[espacioId] = {
+                    estado: estadoMapeado,
+                    estadoOriginal: estadoOriginal,
+                    lastUpdated: new Date().toISOString(),
+                    seccionId: seccion.id,
+                    subseccionId: subseccion.id,
+                    puntoId: punto.id,
+                  };
+
+                  console.log(
+                    `🚗 Punto procesado: S${seccion.id}SS${subseccion.id}P${punto.id} - ${estadoOriginal} → ${estadoMapeado}`
+                  );
+                });
+              }
+            });
+          }
+        });
+      }
+
+      // Procesar colores si están disponibles
+      let colores = {};
+      if (data.estado_color && typeof data.estado_color === "object") {
+        Object.keys(data.estado_color).forEach((estadoOriginal) => {
+          const estadoMapeado = mapearEstadoEndpoint(estadoOriginal);
+          colores[estadoMapeado] = data.estado_color[estadoOriginal];
+        });
+        console.log(`🎨 Colores procesados:`, colores);
+      }
+
+      // Crear objeto de estado completo
+      const stateData = {
+        estados,
+        colores,
+        _endpoint: stateEndpoint,
+        _loadedAt: new Date().toISOString(),
+        _parkingId: parkingId,
+        _rawData: data,
+        _isLocal: false,
+      };
+
+      // Guardar en cache
+      PARKING_STATES[parkingId] = stateData;
+
       console.log(
-        `🏗️ Procesando ${data.secciones.length} secciones del endpoint...`
+        `✅ Estados cargados desde endpoint para ${parkingId}: ${
+          Object.keys(estados).length
+        } espacios`
       );
-
-      data.secciones.forEach((seccion, seccionIndex) => {
-        if (seccion.subsecciones && Array.isArray(seccion.subsecciones)) {
-          seccion.subsecciones.forEach((subseccion, subseccionIndex) => {
-            if (
-              subseccion.puntos_parqueo &&
-              Array.isArray(subseccion.puntos_parqueo)
-            ) {
-              subseccion.puntos_parqueo.forEach((punto) => {
-                // Generar el mismo ID que usa la configuración estructural
-                const espacioId = `seccion_${seccion.id}_sub_${subseccion.id}_punto_${punto.id}`;
-                const estadoOriginal = punto.estado;
-                const estadoMapeado = mapearEstadoEndpoint(estadoOriginal);
-
-                estados[espacioId] = {
-                  estado: estadoMapeado,
-                  estadoOriginal: estadoOriginal,
-                  lastUpdated: new Date().toISOString(),
-                  seccionId: seccion.id,
-                  subseccionId: subseccion.id,
-                  puntoId: punto.id,
-                };
-
-                console.log(
-                  `🚗 Punto procesado: S${seccion.id}SS${subseccion.id}P${punto.id} - ${estadoOriginal} → ${estadoMapeado}`
-                );
-              });
-            }
-          });
-        }
-      });
+      return stateData;
+    } catch (fetchError) {
+      console.warn(`⚠️ Error cargando desde endpoint: ${fetchError.message}`);
+      console.log(`📂 Fallback: usando estados locales para ${parkingId}`);
+      return processLocalStates(parkingId);
     }
-
-    // Procesar colores si están disponibles
-    let colores = {};
-    if (data.estado_color && typeof data.estado_color === "object") {
-      Object.keys(data.estado_color).forEach((estadoOriginal) => {
-        const estadoMapeado = mapearEstadoEndpoint(estadoOriginal);
-        colores[estadoMapeado] = data.estado_color[estadoOriginal];
-      });
-      console.log(`🎨 Colores procesados:`, colores);
-    }
-
-    // Crear objeto de estado completo
-    const stateData = {
-      estados,
-      colores,
-      _endpoint: stateEndpoint,
-      _loadedAt: new Date().toISOString(),
-      _parkingId: parkingId,
-      _rawData: data, // Guardar datos originales para debug
-    };
-
-    // Guardar en cache
-    PARKING_STATES[parkingId] = stateData;
-
-    console.log(
-      `✅ Estados cargados para ${parkingId}: ${
-        Object.keys(estados).length
-      } espacios`
-    );
-    return stateData;
   } catch (error) {
     console.error(
-      `❌ Error cargando estados para ${parkingId}:`,
+      `❌ Error general cargando estados para ${parkingId}:`,
       error.message
     );
 
-    // Usar cache como fallback
+    // Usar cache como último recurso
     if (PARKING_STATES[parkingId]) {
-      console.log(`📋 Usando estados de cache como fallback para ${parkingId}`);
+      console.log(
+        `📋 Usando estados de cache como último recurso para ${parkingId}`
+      );
       return PARKING_STATES[parkingId];
     }
 
+    // Si no hay cache, usar estados locales
+    return processLocalStates(parkingId);
+  }
+};
+
+/**
+ * Carga solo la configuración estructural con fallback local
+ */
+const loadStructuralConfig = async (parkingId, forceRefresh = false) => {
+  try {
+    const endpoint = getParkingEndpoint(parkingId);
+
+    // Verificar si hay configuración local disponible antes de intentar endpoint
+    const hasLocalConfig = !!LOCAL_PARKING_CONFIGS[parkingId];
+
+    if (!hasLocalConfig) {
+      console.warn(
+        `⚠️ No hay configuración local para ${parkingId} - este parqueadero se omitirá si el endpoint falla`
+      );
+    }
+
+    console.log(
+      `🏗️ Intentando cargar estructura desde ${endpoint} para ${parkingId}...`
+    );
+
+    try {
+      // Usar Promise.race para timeout más agresivo
+      const timeoutPromise = new Promise((_, reject) => {
+        setTimeout(
+          () => reject(new Error("Timeout - Endpoint no responde")),
+          1000
+        );
+      });
+
+      const fetchPromise = fetch(endpoint, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      const response = await Promise.race([fetchPromise, timeoutPromise]);
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      console.log(`📊 Datos estructurales recibidos del endpoint:`, data);
+
+      // Procesar respuesta según el formato
+      let config = null;
+
+      if (Array.isArray(data)) {
+        config = data.find((parking) => parking.id === parkingId) || data[0];
+      } else if (data && typeof data === "object") {
+        config = data;
+      }
+
+      if (!config) {
+        throw new Error(
+          `No se encontraron datos estructurales en el endpoint para ${parkingId}`
+        );
+      }
+
+      // Normalizar estructura de datos
+      config = normalizeDataStructure(config);
+
+      // Asegurar propiedades básicas
+      if (!config.id) config.id = parkingId;
+      if (!validateMinimalConfig(config)) {
+        throw new Error(
+          `Configuración estructural inválida del endpoint para ${parkingId}`
+        );
+      }
+
+      // Agregar metadata
+      config._endpoint = endpoint;
+      config._loadedAt = new Date().toISOString();
+      config._isLocal = false;
+
+      console.log(
+        `✅ Configuración estructural cargada desde endpoint para ${parkingId}`
+      );
+      return config;
+    } catch (fetchError) {
+      console.warn(`⚠️ Error cargando desde endpoint: ${fetchError.message}`);
+
+      if (hasLocalConfig) {
+        console.log(
+          `📂 Fallback: usando configuración local para ${parkingId}`
+        );
+
+        // Usar configuración local como fallback
+        const localConfig = getLocalParkingConfig(parkingId);
+
+        if (!localConfig) {
+          throw new Error(
+            `No hay configuración local disponible para ${parkingId}`
+          );
+        }
+
+        // Normalizar estructura de datos local
+        const normalizedConfig = normalizeDataStructure(localConfig);
+
+        // Asegurar propiedades básicas
+        if (!normalizedConfig.id) normalizedConfig.id = parkingId;
+        if (!validateMinimalConfig(normalizedConfig)) {
+          throw new Error(`Configuración local inválida para ${parkingId}`);
+        }
+
+        // Agregar metadata
+        normalizedConfig._endpoint = "local_data";
+        normalizedConfig._loadedAt = new Date().toISOString();
+        normalizedConfig._isLocal = true;
+
+        console.log(
+          `✅ Configuración estructural cargada desde /data para ${parkingId}`
+        );
+        return normalizedConfig;
+      } else {
+        console.warn(
+          `❌ No hay fallback local para ${parkingId} - parqueadero omitido`
+        );
+        throw new Error(
+          `Sin endpoint ni configuración local para ${parkingId}`
+        );
+      }
+    }
+  } catch (error) {
+    console.error(
+      `❌ Error general cargando estructura para ${parkingId}:`,
+      error.message
+    );
     return null;
   }
 };
@@ -265,7 +576,7 @@ const normalizeDataStructure = (data) => {
               const columna = index % espaciosPorFila;
 
               return {
-                id: `seccion_${seccion.id}_sub_${subseccion.id}_punto_${punto.id}`, // Debe coincidir con loadParkingStates
+                id: `seccion_${seccion.id}_sub_${subseccion.id}_punto_${punto.id}`,
                 posicion: punto.posicion || {
                   x: columna * 50 + 10,
                   y: fila * 45 + 10,
@@ -361,7 +672,9 @@ const mergeConfigWithStates = (config, stateData) => {
     });
 
     console.log(
-      `🔗 ${espaciosActualizados} espacios actualizados con estados del endpoint`
+      `🔗 ${espaciosActualizados} espacios actualizados con estados del ${
+        stateData._isLocal ? "archivo local" : "endpoint"
+      }`
     );
   }
 
@@ -371,6 +684,7 @@ const mergeConfigWithStates = (config, stateData) => {
     loadedAt: stateData._loadedAt,
     totalStates: Object.keys(estados).length,
     colores: stateData.colores || {},
+    isLocal: stateData._isLocal || false,
   };
 
   return mergedConfig;
@@ -408,6 +722,7 @@ export const loadParkingConfig = async (parkingId, forceRefresh = false) => {
       estados: stateData ? Object.keys(stateData.estados).length : 0,
       estructura: completeConfig._secciones_originales ? "secciones" : "zonas",
       tieneEstados: !!stateData,
+      esLocal: completeConfig._isLocal || (stateData && stateData._isLocal),
     });
 
     return completeConfig;
@@ -428,71 +743,6 @@ export const loadParkingConfig = async (parkingId, forceRefresh = false) => {
 };
 
 /**
- * Carga solo la configuración estructural (zonas, espacios, coordenadas)
- */
-const loadStructuralConfig = async (parkingId, forceRefresh = false) => {
-  try {
-    const endpoint = getParkingEndpoint(parkingId);
-    console.log(
-      `🏗️ Cargando estructura desde ${endpoint} para ${parkingId}...`
-    );
-
-    const response = await fetch(endpoint, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      timeout: 8000,
-    });
-
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-
-    const data = await response.json();
-    console.log(`📊 Datos estructurales recibidos:`, data);
-
-    // Procesar respuesta según el formato
-    let config = null;
-
-    if (Array.isArray(data)) {
-      config = data.find((parking) => parking.id === parkingId) || data[0];
-    } else if (data && typeof data === "object") {
-      config = data;
-    }
-
-    if (!config) {
-      console.warn(
-        `❌ No se encontraron datos estructurales para ${parkingId}`
-      );
-      return null;
-    }
-
-    // Normalizar estructura de datos
-    config = normalizeDataStructure(config);
-
-    // Asegurar propiedades básicas
-    if (!config.id) config.id = parkingId;
-    if (!validateMinimalConfig(config)) {
-      console.error(`❌ Configuración estructural inválida para ${parkingId}`);
-      return null;
-    }
-
-    // Agregar metadata
-    config._endpoint = endpoint;
-    config._loadedAt = new Date().toISOString();
-
-    return config;
-  } catch (error) {
-    console.error(
-      `❌ Error cargando estructura para ${parkingId}:`,
-      error.message
-    );
-    return null;
-  }
-};
-
-/**
  * ACTUALIZADO: Actualiza el estado de un espacio específico
  */
 export const updateSpaceStatus = async (parkingId, spaceId, newStatus) => {
@@ -502,7 +752,6 @@ export const updateSpaceStatus = async (parkingId, spaceId, newStatus) => {
     );
 
     // Extraer información del spaceId
-    // Formato esperado: seccion_1_sub_2_punto_3
     const match = spaceId.match(/seccion_(\d+)_sub_(\d+)_punto_(\d+)/);
     if (!match) {
       console.warn(`⚠️ Formato de spaceId no reconocido: ${spaceId}`);
@@ -511,12 +760,12 @@ export const updateSpaceStatus = async (parkingId, spaceId, newStatus) => {
     const stateEndpoint = getStateEndpoint(parkingId);
     const estadoEndpoint = mapearEstadoAppAEndpoint(newStatus);
 
-    // Solo intentar actualizar en API si hay endpoint de estados
-    if (stateEndpoint && match) {
+    // Solo intentar actualizar en API si hay endpoint de estados y no es local
+    if (stateEndpoint && match && !PARKING_STATES[parkingId]?._isLocal) {
       const [, seccionId, subseccionId, puntoId] = match;
 
       try {
-        // Intentar actualizar en el endpoint (ajusta la URL según tu API)
+        // Intentar actualizar en el endpoint
         const updateUrl = `${stateEndpoint.replace(
           "/estados/",
           "/update/"
@@ -532,7 +781,7 @@ export const updateSpaceStatus = async (parkingId, spaceId, newStatus) => {
             estado: estadoEndpoint,
             timestamp: new Date().toISOString(),
           }),
-          timeout: 3000,
+          timeout: 1000,
         });
 
         if (response.ok) {
@@ -543,6 +792,10 @@ export const updateSpaceStatus = async (parkingId, spaceId, newStatus) => {
       } catch (apiError) {
         console.warn(`⚠️ Error conectando con API: ${apiError.message}`);
       }
+    } else if (PARKING_STATES[parkingId]?._isLocal) {
+      console.log(
+        `📂 Usando datos locales - no se puede actualizar en servidor`
+      );
     }
 
     // Actualizar cache de estados local
@@ -577,68 +830,6 @@ export const updateSpaceStatus = async (parkingId, spaceId, newStatus) => {
     console.error("❌ Error actualizando estado del espacio:", error.message);
     return false;
   }
-};
-
-/**
- * Carga todos los parqueaderos con sus estados - SIN DUPLICADOS
- */
-export const loadAllParkings = async (forceRefresh = false) => {
-  try {
-    console.log("🌐 Cargando todos los parqueaderos con estados...");
-
-    // Obtener solo los IDs principales para evitar duplicados
-    const uniquePrimaryIds = [...new Set(Object.values(PRIMARY_PARKING_IDS))];
-
-    console.log(`📋 IDs principales únicos: ${uniquePrimaryIds.join(", ")}`);
-
-    const allParkings = [];
-
-    // Cargar cada parqueadero principal individualmente
-    for (const primaryId of uniquePrimaryIds) {
-      try {
-        console.log(`🔄 Cargando parqueadero principal: ${primaryId}`);
-        const config = await loadParkingConfig(primaryId, forceRefresh);
-        if (config) {
-          allParkings.push(config);
-        }
-      } catch (error) {
-        console.warn(`⚠️ Error cargando ${primaryId}:`, error.message);
-      }
-    }
-
-    console.log(
-      `✅ ${allParkings.length} parqueaderos únicos cargados con estados`
-    );
-    return allParkings;
-  } catch (error) {
-    console.error("❌ Error cargando todos los parqueaderos:", error.message);
-    return Object.values(PARKING_CONFIGS);
-  }
-};
-
-/**
- * Validación mínima
- */
-const validateMinimalConfig = (config) => {
-  if (!config || typeof config !== "object") {
-    console.error("Config debe ser un objeto");
-    return false;
-  }
-
-  if (!config.id && !config.nombre) {
-    console.error("Config debe tener al menos id o nombre");
-    return false;
-  }
-
-  if (!config.nombre && config.id) {
-    config.nombre = config.id;
-  }
-
-  if (!config.id && config.nombre) {
-    config.id = config.nombre.toLowerCase().replace(/\s+/g, "_");
-  }
-
-  return true;
 };
 
 /**
@@ -725,6 +916,8 @@ export const getAvailableParkings = async (forceRefresh = false) => {
         estadosEndpoint: config._estados?.endpoint || "No configurado",
         lastUpdated: config._loadedAt || new Date().toISOString(),
         estructura: config._secciones_originales ? "secciones" : "zonas",
+        isLocal: config._isLocal || false,
+        estadosLocales: config._estados?.isLocal || false,
       };
     });
   } catch (error) {
@@ -779,7 +972,7 @@ export const testAllEndpoints = async () => {
       const response = await fetch(endpoint, {
         method: "GET",
         headers: { "Content-Type": "application/json" },
-        timeout: 5000,
+        timeout: 1000,
       });
 
       results[endpoint] = {
@@ -813,12 +1006,41 @@ export const testAllEndpoints = async () => {
 };
 
 /**
- * Función de DEBUG específica para el endpoint de estados
+ * Función de DEBUG específica para el endpoint de estados con fallback local
  */
 export const debugStateEndpoint = async (parkingId) => {
   const endpoint = getStateEndpoint(parkingId);
+
   if (!endpoint) {
-    console.error(`No hay endpoint de estados para ${parkingId}`);
+    console.log(
+      `📂 No hay endpoint de estados para ${parkingId}, mostrando datos locales...`
+    );
+    const localStates = getLocalParkingStates(parkingId);
+
+    if (localStates) {
+      console.group(`🐛 DEBUG: Estados locales de ${parkingId}`);
+      console.log("📂 Fuente: Configuración local desde /data");
+      console.log("📦 Datos locales:", localStates);
+
+      if (localStates.secciones) {
+        localStates.secciones.forEach((seccion) => {
+          console.group(`Sección ${seccion.id}`);
+          seccion.subsecciones?.forEach((sub) => {
+            console.log(
+              `Subsección ${sub.id}: ${sub.puntos_parqueo?.length || 0} puntos`
+            );
+            sub.puntos_parqueo?.slice(0, 3).forEach((punto) => {
+              console.log(`  Punto ${punto.id}: ${punto.estado}`);
+            });
+          });
+          console.groupEnd();
+        });
+      }
+
+      console.groupEnd();
+    } else {
+      console.error(`❌ No hay datos locales disponibles para ${parkingId}`);
+    }
     return;
   }
 
@@ -847,8 +1069,97 @@ export const debugStateEndpoint = async (parkingId) => {
 
     console.groupEnd();
   } catch (error) {
-    console.error("Error en debug:", error);
+    console.error(
+      "Error en debug del endpoint, probando datos locales:",
+      error
+    );
+
+    const localStates = getLocalParkingStates(parkingId);
+    if (localStates) {
+      console.group(`🐛 DEBUG FALLBACK: Estados locales de ${parkingId}`);
+      console.log("📂 Usando datos locales como fallback");
+      console.log("📦 Datos locales:", localStates);
+      console.groupEnd();
+    }
   }
+};
+
+/**
+ * Función para verificar qué archivos están disponibles en /data
+ */
+export const getLocalDataStatus = () => {
+  const status = {
+    configs: {
+      sede_principal_p1: !!LOCAL_PARKING_CONFIGS["sede_principal_p1"],
+      parqueadero_medicina_p1:
+        !!LOCAL_PARKING_CONFIGS["parqueadero_medicina_p1"],
+    },
+    states: {
+      sede_principal_p1: !!LOCAL_PARKING_STATES["sede_principal_p1"],
+      parqueadero_medicina_p1:
+        !!LOCAL_PARKING_STATES["parqueadero_medicina_p1"],
+    },
+    total: {
+      configs: Object.keys(LOCAL_PARKING_CONFIGS).length,
+      states: Object.keys(LOCAL_PARKING_STATES).length,
+    },
+  };
+
+  console.group("📂 Estado de archivos locales en /data");
+  console.log("Configuraciones disponibles:", status.configs);
+  console.log("Estados disponibles:", status.states);
+  console.log("Total archivos cargados:", status.total);
+  console.groupEnd();
+
+  return status;
+};
+
+/**
+ * Función para verificar si un parqueadero está usando datos locales
+ */
+export const isParkingUsingLocalData = (parkingId) => {
+  const config = PARKING_CONFIGS[parkingId];
+  const states = PARKING_STATES[parkingId];
+
+  return {
+    config: config?._isLocal || false,
+    states: states?._isLocal || false,
+    both: (config?._isLocal || false) && (states?._isLocal || false),
+    sources: {
+      config: config?._endpoint || "no cargado",
+      states: states?._endpoint || "no cargado",
+    },
+  };
+};
+
+/**
+ * Función para obtener información detallada de fuentes de datos
+ */
+export const getDataSources = () => {
+  const sources = {};
+
+  // Revisar configuraciones cargadas
+  Object.keys(PARKING_CONFIGS).forEach((parkingId) => {
+    const config = PARKING_CONFIGS[parkingId];
+    const states = PARKING_STATES[parkingId];
+
+    sources[parkingId] = {
+      config: {
+        source: config?._isLocal ? "local_data" : "endpoint",
+        endpoint: config?._endpoint || "N/A",
+        loadedAt: config?._loadedAt || "N/A",
+        available: !!config,
+      },
+      states: {
+        source: states?._isLocal ? "local_data" : "endpoint",
+        endpoint: states?._endpoint || "N/A",
+        loadedAt: states?._loadedAt || "N/A",
+        available: !!states,
+      },
+    };
+  });
+
+  return sources;
 };
 
 /**
@@ -860,11 +1171,125 @@ export const clearCache = () => {
   console.log("🗑️ Todos los caches limpiados (configuraciones y estados)");
 };
 
+/**
+ * Debug completo del sistema de fallback
+ */
+export const debugLocalFallbackSystem = () => {
+  console.group("🐛 DEBUG: Sistema de Fallback Local");
+
+  // Estado de archivos locales
+  const localStatus = getLocalDataStatus();
+
+  // Fuentes de datos actuales
+  const dataSources = getDataSources();
+  console.log("📊 Fuentes de datos actuales:", dataSources);
+
+  // Endpoints configurados
+  console.log("🌐 Endpoints estructurales:", PARKING_ENDPOINTS);
+  console.log("📡 Endpoints de estados:", STATE_ENDPOINTS);
+
+  // Mapeo de IDs
+  console.log("🗂️ Mapeo de IDs principales:", PRIMARY_PARKING_IDS);
+
+  console.groupEnd();
+
+  return {
+    localStatus,
+    dataSources,
+    endpoints: {
+      structural: PARKING_ENDPOINTS,
+      states: STATE_ENDPOINTS,
+    },
+    idMapping: PRIMARY_PARKING_IDS,
+  };
+};
+
 // Exportar configuraciones para debugging
 export {
+  getLocalParkingConfig,
+  getLocalParkingStates,
+  LOCAL_PARKING_CONFIGS,
+  LOCAL_PARKING_STATES,
   PARKING_CONFIGS,
   PARKING_ENDPOINTS,
   PARKING_STATES,
   PRIMARY_PARKING_IDS,
   STATE_ENDPOINTS,
+};
+
+/**
+ * Carga todos los parqueaderos con sus estados - SIN DUPLICADOS
+ */
+export const loadAllParkings = async (forceRefresh = false) => {
+  try {
+    console.log("🌐 Cargando todos los parqueaderos con estados...");
+
+    const uniquePrimaryIds = [...new Set(Object.values(PRIMARY_PARKING_IDS))];
+    console.log(`📋 IDs principales únicos: ${uniquePrimaryIds.join(", ")}`);
+
+    // ✅ AGREGAR ESTO - Filtrar antes de intentar cargar
+    const availableParkingIds = uniquePrimaryIds.filter((parkingId) => {
+      const hasLocalConfig = !!LOCAL_PARKING_CONFIGS[parkingId];
+      const hasEndpoint = !!PARKING_ENDPOINTS[parkingId];
+
+      if (!hasLocalConfig && !hasEndpoint) {
+        console.warn(
+          `⚠️ Omitiendo ${parkingId}: sin configuración local ni endpoint`
+        );
+        return false;
+      }
+
+      return true;
+    });
+
+    console.log(
+      `📋 Parqueaderos disponibles: ${availableParkingIds.join(", ")}`
+    );
+
+    const allParkings = [];
+
+    // ✅ Usar la lista filtrada
+    for (const primaryId of availableParkingIds) {
+      try {
+        console.log(`🔄 Cargando parqueadero principal: ${primaryId}`);
+        const config = await loadParkingConfig(primaryId, forceRefresh);
+        if (config) {
+          allParkings.push(config);
+        }
+      } catch (error) {
+        console.warn(`⚠️ Error cargando ${primaryId}:`, error.message);
+      }
+    }
+
+    console.log(`✅ ${allParkings.length} parqueaderos cargados`);
+    return allParkings;
+  } catch (error) {
+    console.error("❌ Error cargando parqueaderos:", error.message);
+    return Object.values(PARKING_CONFIGS);
+  }
+};
+
+/**
+ * Validación mínima
+ */
+const validateMinimalConfig = (config) => {
+  if (!config || typeof config !== "object") {
+    console.error("Config debe ser un objeto");
+    return false;
+  }
+
+  if (!config.id && !config.nombre) {
+    console.error("Config debe tener al menos id o nombre");
+    return false;
+  }
+
+  if (!config.nombre && config.id) {
+    config.nombre = config.id;
+  }
+
+  if (!config.id && config.nombre) {
+    config.id = config.nombre.toLowerCase().replace(/\s+/g, "_");
+  }
+
+  return true;
 };

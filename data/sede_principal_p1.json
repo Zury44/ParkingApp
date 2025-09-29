@@ -371,7 +371,7 @@
           "descripcion": "Seccion café y letras junto a la puerta de entrada",
           "posicion": {
             "x": 30,
-            "y": 30
+            "y": 80
           },
           "dimensiones": {
             "width": 210,
@@ -396,7 +396,7 @@
               "poligono": [0, 0, 45, 0, 45, 35, 0, 35],
               "estado": "disponible",
               "tipo": "regular",
-              "descripcion": "Este punto se encuentra en la sección café y letras  en la subsección Cafe Isla, junto a la puerta de entrada",
+              "descripcion": "Este punto se encuentra en la sección café y letras en la subsección Cafe Isla, junto a la puerta de entrada",
               "estilo": {
                 "stroke": "#ffffff",
                 "strokeWidth": 2,
@@ -416,7 +416,7 @@
               "poligono": [50, 0, 95, 0, 95, 35, 50, 35],
               "estado": "ocupado",
               "tipo": "regular",
-              "descripcion": "Este punto se encuentra en la sección café y letras  en la subsección Cafe Isla, junto a la puerta de entrada",
+              "descripcion": "Este punto se encuentra en la sección café y letras en la subsección Cafe Isla, junto a la puerta de entrada",
               "estilo": {
                 "stroke": "#ffffff",
                 "strokeWidth": 2,
@@ -431,11 +431,11 @@
           "descripcion": "Sección café y letras junto a las mesas y casetas",
           "posicion": {
             "x": 30,
-            "y": 30
+            "y": 180
           },
           "dimensiones": {
             "width": 210,
-            "height": 45
+            "height": 95
           },
           "estilo": {
             "fill": "rgba(255, 193, 7, 0.05)",
@@ -466,14 +466,14 @@
             {
               "id": 2,
               "posicion": {
-                "x": 0,
+                "x": 50,
                 "y": 0
               },
               "dimensiones": {
                 "width": 45,
                 "height": 35
               },
-              "poligono": [0, 0, 45, 0, 45, 35, 0, 35],
+              "poligono": [50, 0, 95, 0, 95, 35, 50, 35],
               "estado": "disponible",
               "tipo": "regular",
               "descripcion": "Este punto se encuentra en la sección café y letras en la subsección parque, junto a las mesas y casetas",
@@ -486,14 +486,14 @@
             {
               "id": 3,
               "posicion": {
-                "x": 0,
+                "x": 100,
                 "y": 0
               },
               "dimensiones": {
                 "width": 45,
                 "height": 35
               },
-              "poligono": [0, 0, 45, 0, 45, 35, 0, 35],
+              "poligono": [100, 0, 145, 0, 145, 35, 100, 35],
               "estado": "disponible",
               "tipo": "regular",
               "descripcion": "Este punto se encuentra en la sección café y letras en la subsección parque, junto a las mesas y casetas",
@@ -513,16 +513,16 @@
       "acronimo": "ADM",
       "descripcion": "Seccion Administración",
       "posicion": {
-        "x": 30,
-        "y": 30
+        "x": 380,
+        "y": 40
       },
       "dimensiones": {
-        "width": 210,
-        "height": 95
+        "width": 190,
+        "height": 85
       },
       "estilo": {
-        "fill": "rgba(255, 193, 7, 0.1)",
-        "stroke": "#FFC107",
+        "fill": "rgba(33, 150, 243, 0.1)",
+        "stroke": "#2196F3",
         "strokeWidth": 3
       },
       "subsecciones": [
@@ -531,16 +531,16 @@
           "nombre": "Jardín derecho",
           "descripcion": "Seccion Administración jardín derecho",
           "posicion": {
-            "x": 30,
-            "y": 30
+            "x": 380,
+            "y": 40
           },
           "dimensiones": {
-            "width": 210,
-            "height": 45
+            "width": 190,
+            "height": 40
           },
           "estilo": {
-            "fill": "rgba(255, 193, 7, 0.05)",
-            "stroke": "#FFA000",
+            "fill": "rgba(33, 150, 243, 0.05)",
+            "stroke": "#1976D2",
             "strokeWidth": 2
           },
           "puntos_parqueo": [
@@ -631,16 +631,16 @@
           "nombre": "Jardín izquierdo",
           "descripcion": "Seccion Administración jardín izquierdo",
           "posicion": {
-            "x": 30,
-            "y": 30
+            "x": 380,
+            "y": 85
           },
           "dimensiones": {
-            "width": 210,
-            "height": 45
+            "width": 190,
+            "height": 40
           },
           "estilo": {
-            "fill": "rgba(255, 193, 7, 0.05)",
-            "stroke": "#FFA000",
+            "fill": "rgba(33, 150, 243, 0.05)",
+            "stroke": "#1976D2",
             "strokeWidth": 2
           },
           "puntos_parqueo": [
@@ -678,7 +678,6 @@
               "estado": "ocupado",
               "tipo": "regular",
               "descripcion": "Este punto se encuentra en la sección Administrativa en la subsección jardín izquierdo, junto al bloque de administración en el cual se encuentra el CETIC",
-
               "estilo": {
                 "stroke": "#ffffff",
                 "strokeWidth": 2,
@@ -695,16 +694,16 @@
       "acronimo": "CEN",
       "descripcion": "Seccion Central",
       "posicion": {
-        "x": 30,
-        "y": 30
+        "x": 380,
+        "y": 180
       },
       "dimensiones": {
-        "width": 210,
+        "width": 190,
         "height": 95
       },
       "estilo": {
-        "fill": "rgba(255, 193, 7, 0.1)",
-        "stroke": "#FFC107",
+        "fill": "rgba(76, 175, 80, 0.1)",
+        "stroke": "#4CAF50",
         "strokeWidth": 3
       },
       "subsecciones": [
@@ -713,16 +712,16 @@
           "nombre": "Central derecha",
           "descripcion": "Seccion Central derecha",
           "posicion": {
-            "x": 30,
-            "y": 30
+            "x": 380,
+            "y": 180
           },
           "dimensiones": {
-            "width": 210,
+            "width": 190,
             "height": 45
           },
           "estilo": {
-            "fill": "rgba(255, 193, 7, 0.05)",
-            "stroke": "#FFA000",
+            "fill": "rgba(76, 175, 80, 0.05)",
+            "stroke": "#388E3C",
             "strokeWidth": 2
           },
           "puntos_parqueo": [
@@ -813,16 +812,16 @@
           "nombre": "Central izquierda",
           "descripcion": "Seccion Central jardín izquierdo",
           "posicion": {
-            "x": 30,
-            "y": 30
+            "x": 380,
+            "y": 230
           },
           "dimensiones": {
-            "width": 210,
+            "width": 190,
             "height": 45
           },
           "estilo": {
-            "fill": "rgba(255, 193, 7, 0.05)",
-            "stroke": "#FFA000",
+            "fill": "rgba(76, 175, 80, 0.05)",
+            "stroke": "#388E3C",
             "strokeWidth": 2
           },
           "puntos_parqueo": [
@@ -860,7 +859,6 @@
               "estado": "ocupado",
               "tipo": "regular",
               "descripcion": "Este punto se encuentra en la sección Central en la subsección central izquierda, frente a la entrada principal, destinado para discapacitados",
-
               "estilo": {
                 "stroke": "#ffffff",
                 "strokeWidth": 2,

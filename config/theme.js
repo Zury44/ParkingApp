@@ -1,22 +1,27 @@
 export const colors = {
-  primary: "#0a7ea4", // azul principal
-  secondary: "#90141C", // azul logo claro
-  tertiary: "#292929", // azul logo oscuro
-  accent: "#36558E", // Azul
-  gray: "#595959", // Gris oscuro
-  darkGray: "#292929", // Gris más oscuro
-  lightGray: "#f3f3f3", // Gris claro
-  border: "#e5e7eb", // Bordes claros
-  base: "#F9F9FA", // Fondo
-  white: "#FFFFFF", // Blanco
-  error: "#B3261E", // Rojo
-  success: "#ffffffff", // Verde
-  text: "#11181C", // texto principal
-  textSec: "#6b7280", // texto secundario
+  primary: "#999999ff",
+  secondary: "#90141C",
+  tertiary: "#292929",
+  accent: "#ffc107",
+
+  gray: "#595959",
+  darkGray: "#292929",
+  lightGray: "#f3f3f3",
+  border: "#e5e7eb",
+  base: "#F9F9FA",
+  white: "#FFFFFF",
+  error: "#ff00f7ff",
+  disponible: "#28a745",
+  text: "#11181C",
+  textSec: "#6b7280",
   red: "#90141C",
-  disponible: "#28a745", // Verde (para "desocupado" del endpoint)
-  ocupado: "#dc3545", // Rojo (para "ocupado")
-  reservado: "#ffc107", // Amarillo (para "reservado")
-  mantenimiento: "#6c757d", // Gris
+
+  placeholder: "#ff00006c",
+
+  disponible: "#28a745",
+  ocupado: "#dc3545",
+  reservado: "#ffc107",
+  mantenimiento: "#6c757d",
+
   default: "#e9ecef",
 };

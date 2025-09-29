@@ -74,36 +74,16 @@ export default function ParkingSelectorScreen() {
       return;
     }
 
-    Alert.alert(
-      "Acceder al Parqueadero",
-      `¿Deseas ingresar a ${selectedParking.nombre}?`,
-      [
-        { text: "Cancelar", style: "cancel" },
-        {
-          text: "Acceder",
-          onPress: () => {
-            router.push(`/parking/${selectedParking.id}`);
-          },
-        },
-      ]
-    );
+    router.push(`/parking/${selectedParking.id}`);
   };
 
-  const handleLogout = () => {
-    Alert.alert("Cerrar Sesión", "¿Estás seguro de que deseas cerrar sesión?", [
-      { text: "Cancelar", style: "cancel" },
-      {
-        text: "Cerrar Sesión",
-        onPress: async () => {
-          try {
-            await cerrarSesion();
-            router.replace("/login");
-          } catch (error) {
-            console.error("Error cerrando sesión:", error);
-          }
-        },
-      },
-    ]);
+  const handleLogout = async () => {
+    try {
+      await cerrarSesion();
+      router.replace("/login");
+    } catch (error) {
+      console.error("Error cerrando sesión:", error);
+    }
   };
 
   const renderDropdownItem = ({ item }) => (
@@ -193,7 +173,7 @@ export default function ParkingSelectorScreen() {
             onPress={handleLogout}
             activeOpacity={0.7}
           >
-            <Ionicons name="log-out-outline" size={24} color={colors.error} />
+            <Ionicons name="log-out-outline" size={24} color={colors.red} />
           </TouchableOpacity>
         </View>
 

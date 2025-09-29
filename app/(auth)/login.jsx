@@ -460,7 +460,7 @@ const styles = StyleSheet.create({
   },
   // Error general para errores de servidor
   generalError: {
-    color: colors.error,
+    color: colors.red,
     marginBottom: 16,
     textAlign: "center",
     ...typography.regular.regular,

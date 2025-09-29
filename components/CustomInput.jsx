@@ -50,7 +50,7 @@ const CustomInput = ({
           <Ionicons
             name={icon}
             size={20}
-            color={error ? colors.error : colors.textSec}
+            color={error ? colors.red : colors.textSec}
           />
         )}
 
@@ -104,7 +104,7 @@ const styles = StyleSheet.create({
     borderColor: "transparent",
   },
   inputContainerError: {
-    borderColor: colors.error,
+    borderColor: colors.red,
     backgroundColor: "#fef2f2",
   },
   inputContainerDisabled: {
@@ -118,7 +118,7 @@ const styles = StyleSheet.create({
   },
   errorText: {
     ...typography.regular.small,
-    color: colors.error,
+    color: colors.red,
     marginTop: 4,
   },
 });

@@ -22,11 +22,11 @@ export const SpaceModal = ({
   const getColorEstado = (estado) => {
     switch (estado) {
       case "disponible":
-        return colors.success;
+        return colors.disponible;
       case "ocupado":
-        return colors.error;
+        return colors.ocupado;
       case "reservado":
-        return colors.accent;
+        return colors.reservado;
       case "mantenimiento":
         return colors.gray;
       default:
@@ -56,25 +56,25 @@ export const SpaceModal = ({
       estado: "disponible",
       label: "Liberar",
       icon: "checkmark-circle",
-      color: colors.success,
+      color: colors.disponible,
     },
     {
       estado: "ocupado",
       label: "Ocupar",
       icon: "car",
-      color: colors.error,
+      color: colors.ocupado,
     },
     {
       estado: "reservado",
       label: "Reservar",
       icon: "lock-closed",
-      color: colors.accent,
+      color: colors.reservado,
     },
     {
       estado: "mantenimiento",
       label: "Mantenimiento",
       icon: "construct",
-      color: colors.gray,
+      color: colors.mantenimiento,
     },
   ];
 
@@ -108,7 +108,7 @@ export const SpaceModal = ({
             <View style={styles.infoRow}>
               <Ionicons name="business" size={16} color={colors.primary} />
               <Text style={styles.modalInfo}>
-                Zona: {espacioSeleccionado.zona || "N/A"}
+                Espacio: {espacioSeleccionado.zona || "N/A"}
               </Text>
             </View>
 
@@ -116,7 +116,7 @@ export const SpaceModal = ({
             {tieneSeccionInfo && (
               <>
                 <View style={styles.infoRow}>
-                  <Ionicons name="layers" size={16} color={colors.accent} />
+                  <Ionicons name="layers" size={16} color={colors.primary} />
                   <Text style={styles.modalInfo}>
                     Sección:{" "}
                     {seccionInfo.seccionNombre ||
@@ -126,7 +126,7 @@ export const SpaceModal = ({
                 </View>
 
                 <View style={styles.infoRow}>
-                  <Ionicons name="grid" size={16} color={colors.accent} />
+                  <Ionicons name="grid" size={16} color={colors.primary} />
                   <Text style={styles.modalInfo}>
                     Subsección: {espacioSeleccionado._subseccionId || "N/A"}
                   </Text>
@@ -156,44 +156,7 @@ export const SpaceModal = ({
                 Estado: {espacioSeleccionado.estado.toUpperCase()}
               </Text>
             </View>
-
-            {/* Mostrar descripción si existe */}
-            {espacioSeleccionado.descripcion && (
-              <View style={styles.descriptionContainer}>
-                <Ionicons
-                  name="information-circle"
-                  size={16}
-                  color={colors.textSec}
-                />
-                <Text style={styles.descriptionText}>
-                  {espacioSeleccionado.descripcion}
-                </Text>
-              </View>
-            )}
-
-            {/* Información técnica adicional */}
-            {espacioSeleccionado.poligono && (
-              <View style={styles.technicalInfo}>
-                <Ionicons name="shapes" size={14} color={colors.textSec} />
-                <Text style={styles.technicalText}>
-                  Forma: Polígono ({espacioSeleccionado.poligono.length / 2}{" "}
-                  puntos)
-                </Text>
-              </View>
-            )}
-
-            {espacioSeleccionado.lastUpdated && (
-              <View style={styles.technicalInfo}>
-                <Ionicons name="time" size={14} color={colors.textSec} />
-                <Text style={styles.technicalText}>
-                  Actualizado:{" "}
-                  {new Date(espacioSeleccionado.lastUpdated).toLocaleString()}
-                </Text>
-              </View>
-            )}
           </ScrollView>
-
-          <Text style={styles.actionsTitle}>Cambiar estado:</Text>
 
           <View style={styles.modalButtons}>
             {statusButtons
@@ -290,7 +253,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     marginBottom: 8,
     borderLeftWidth: 3,
-    borderLeftColor: colors.accent,
+    borderLeftColor: colors.primary,
   },
   descriptionText: {
     ...typography.regular.small,
@@ -335,7 +298,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   closeButton: {
-    backgroundColor: colors.gray,
+    backgroundColor: colors.red,
     width: "100%",
     marginTop: 8,
   },

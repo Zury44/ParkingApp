@@ -136,7 +136,7 @@ export const ParkingMap = ({ parkingId }) => {
         }
 
         Alert.alert(
-          "✅ Estado actualizado",
+          "Estado actualizado",
           `Espacio ${espacioId} cambiado a ${nuevoEstado}`
         );
       } else {
@@ -148,30 +148,7 @@ export const ParkingMap = ({ parkingId }) => {
   };
 
   const handleQuickAction = (espacio, zona) => {
-    Alert.alert(
-      `Espacio ${espacio.id}`,
-      [
-        `Zona: ${zona.nombre}`,
-        zona._seccionNombre ? `Sección: ${zona._seccionNombre}` : null,
-        `Estado: ${espacio.estado}`,
-        espacio.descripcion ? `Info: ${espacio.descripcion}` : null,
-      ]
-        .filter(Boolean)
-        .join("\n"),
-      [
-        {
-          text: "Ver detalles",
-          onPress: () => handleEspacioPress(espacio, zona),
-        },
-        {
-          text: "Actualizar datos",
-          onPress: () => {
-            loadParkingData(true, false);
-          },
-        },
-        { text: "Cerrar", style: "cancel" },
-      ]
-    );
+    handleEspacioPress(espacio, zona);
   };
 
   if (loading) {
@@ -246,7 +223,7 @@ const styles = StyleSheet.create({
   },
   errorText: {
     ...typography.regular.medium,
-    color: colors.error,
+    color: colors.red,
     textAlign: "center",
   },
   scrollContainer: {

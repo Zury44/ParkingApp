@@ -167,7 +167,6 @@ export const getAvailableParkings = () => {
       disponibles: stats.disponibles || 0,
       ocupados: stats.ocupados || 0,
       reservados: stats.reservados || 0,
-      mantenimiento: stats.mantenimiento || 0,
     };
   });
 };
